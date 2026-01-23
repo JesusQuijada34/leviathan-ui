@@ -60,10 +60,12 @@ class MiAppPrincipal(QWidget):
         self.btn.clicked.connect(self.close)
 
 if __name__ == "__main__":
+    import os
     app = QApplication(sys.argv)
     
     # 3. InmojiTrx: Icono Premium
-    InmojiTrx("🐉").apply(app)
+    icon_path = os.path.join("app", "lvthnUi.polished-icon.ico")
+    InmojiTrx(icon_path).apply(app)
     
     # 4. Definimos el Splash de Entrada (Modo Adaptive: no tapa el taskbar)
     # Soporta frases personalizadas de inicio

@@ -16,7 +16,9 @@ class WipeWindow(QObject):
     - 'polished': Solid background with rounded corners and shadow.
     - 'ghost': Completely invisible window (ideal for overlays).
     - 'ghostBlur': Transparent with blur effect (frosted glass).
+    - 'mica': Windows 11 Mica material effect.
     """
+
     def __getattr__(self, name):
         valid_methods = [m for m in dir(self) if m.startswith('set_') or m in ['apply', 'create']]
         suggestions = difflib.get_close_matches(name, valid_methods)
@@ -83,8 +85,17 @@ class WipeWindow(QObject):
                 ctypes.windll.dwmapi.DwmSetWindowAttribute(hWnd, 33, ctypes.byref(ctypes.c_int(2)), 4)
             except: pass
 
-        # 5. Apply Windows Acrylic/Blur effect for ghostBlur mode
+        # 5. Apply Windows 11 Mica Backdrop
+        if sys.platform == "win32" and self._mode == "mica":
+            try:
+                hWnd = int(widget.winId())
+                # DWM_SYSTEMBACKDROP_TYPE: 2 = Mica, 3 = Acrylic, 4 = MicaAlt
+                ctypes.windll.dwmapi.DwmSetWindowAttribute(hWnd, 38, ctypes.byref(ctypes.c_int(2)), 4)
+            except: pass
+
+        # 6. Apply Windows Acrylic/Blur effect for ghostBlur mode
         if sys.platform == "win32" and self._mode == "ghostBlur":
+
             try:
                 hWnd = int(widget.winId())
                 # Enable blur behind (DWM_BLURBEHIND)
@@ -136,7 +147,17 @@ class WipeWindow(QObject):
             painter.end()
             return
 
+        if self._mode == "mica":
+            # For Mica, we need to let the system backdrop show through.
+            # Painting a very subtle transparent layer can help with visibility of content.
+            painter.setPen(Qt.NoPen)
+            painter.setBrush(QBrush(QColor(0, 0, 0, 1))) 
+            painter.drawRect(widget.rect())
+            painter.end()
+            return
+
         if self._mode == "ghostBlur":
+
             # Paint a semi-transparent tinted background for the blur effect
             painter.setPen(Qt.NoPen)
             painter.setBrush(QBrush(QColor(0, 0, 0, 30)))  # Very subtle dark tint

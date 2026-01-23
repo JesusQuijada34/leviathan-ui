@@ -1,137 +1,24 @@
-# Leviathan UI
+# 🌊 Leviathan-UI: Framework Premium para PyQt5 (v1.0.3)
 
-**Premium UI Framework for PyQt5 with Windows 11 Aesthetics**
+[![Version](https://img.shields.io/badge/version-1.0.3-orange.svg)](https://github.com/JesusQuijada34/leviathan-ui)
 
-A modern, feature-rich UI framework that brings Windows 11's beautiful design language to your PyQt5 applications.
+**Leviathan-UI** es un framework diseñado para llevar la estética moderna de Windows 11 a tus aplicaciones PyQt5. 
 
-## ✨ Features
+### 🌍 Novedades v1.0.3: Soporte Multilingüe (i18n)
+Esta versión introduce un sistema de internacionalización robusto:
+- **Autodetección de Idioma**: El framework detecta automáticamente el idioma de tu sistema operativo.
+- **Packs de Idioma (`.lv-lng`)**: Soporte para más de 10 regiones, incluyendo Español (AR/MX), Inglés, Árabe, Chino, Japonés, Ruso y más.
+- **Seguridad Regional**: Si no se encuentra un pack compatible, el sistema se protege y notifica al usuario en inglés antes de cerrar.
 
-- **🪟 WipeWindow**: Three stunning window modes
-  - `polished`: Solid background with shadows and rounded corners
-  - `ghost`: Fully transparent overlay mode
-  - `ghostBlur`: Acrylic/frosted glass blur effect (Windows 10/11)
+### ✨ Mejoras en el Instalador
+- **Splash UWP**: El asistente de instalación ahora inicia con una pantalla de carga moderna estilo Windows.
+- **Iconografía SVG Animada**: Cada paso de la instalación cuenta con iconos vectoriales dinámicos.
+- **Instalación Local (`dist/`)**: Capacidad para instalar archivos `.whl` directamente desde la carpeta de distribución.
 
-- **🌊 InmersiveSplash**: Professional splash screen system
-  - Adaptive mode (respects taskbar) and fullscreen mode
-  - Custom phrases for startup and exit
-  - Smooth fade animations
-  - Automatic lifecycle management
+---
 
-- **🎨 CustomTitleBar**: Windows 11 style title bar
-  - Native SVG-drawn window controls
-  - System accent color integration
-  - Smooth drag and maximize/minimize
-
-- **🎭 InmojiTrx**: High-quality icon generation
-  - Convert emojis to multi-resolution ICO files
-  - Support for PNG/ICO images
-  - Perfect taskbar rendering
-
-## 📦 Installation
-
+## 🛠 Instalación
+Ejecuta el asistente visual para una experiencia guiada y multilenguaje:
 ```bash
-pip install leviathan-ui
+python leviathan_installer_gui.py
 ```
-
-Or install from wheel:
-```bash
-pip install leviathan_ui-1.0.0-py3-none-any.whl
-```
-
-## 🚀 Quick Start
-
-```python
-from PyQt5.QtWidgets import QApplication, QWidget
-from leviathan_ui import WipeWindow, InmersiveSplash, CustomTitleBar, InmojiTrx
-
-app = QApplication([])
-
-# Create your main window
-window = QWidget()
-window.resize(800, 600)
-
-# Apply blur effect
-WipeWindow.create()\
-    .set_mode("ghostBlur")\
-    .set_radius(15)\
-    .apply(window)
-
-# Add custom title bar
-title_bar = CustomTitleBar(window, title="My App")
-
-# Set app icon
-InmojiTrx("🚀").apply(app)
-
-# Create splash screen
-splash = InmersiveSplash.create()\
-    .set_mode("adaptive")\
-    .set_phrases(["Loading modules...", "Ready!"])\
-    .on_finish(window.show)\
-    .start()
-
-app.exec_()
-```
-
-## 📖 Documentation
-
-### WipeWindow
-
-```python
-WipeWindow.create()\
-    .set_mode("polished")      # "polished", "ghost", or "ghostBlur"
-    .set_background("auto")     # "auto" or hex color "#RRGGBB"
-    .set_radius(20)             # Corner radius in pixels
-    .set_blur(30)               # Blur intensity (ghostBlur mode only)
-    .apply(widget)
-```
-
-### InmersiveSplash
-
-```python
-InmersiveSplash.create()\
-    .set_mode("adaptive")       # "adaptive" or "full"
-    .set_color("auto")          # "auto" or hex color
-    .set_phrases([...])         # List of status messages
-    .on_finish(callback)        # Function to call when done
-    .attach_to_window(win, exit_phrases=[...])  # Auto exit splash
-    .start()
-```
-
-### CustomTitleBar
-
-```python
-title_bar = CustomTitleBar(
-    parent=window,
-    title="My Application",
-    icon="🎨"
-)
-```
-
-### InmojiTrx
-
-```python
-# From emoji
-InmojiTrx("🐉").apply(app)
-
-# From image file
-InmojiTrx("icon.png").apply(app)
-```
-
-## 🎯 Requirements
-
-- Python 3.8+
-- PyQt5 >= 5.15.0
-- Pillow >= 9.0.0
-- Windows 10/11 (for blur effects)
-
-## 📄 License
-
-MIT License - feel free to use in your projects!
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## ⭐ Credits
-
-Created by Jesus Quijada

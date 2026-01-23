@@ -1,13 +1,22 @@
-import sys
+import os
 import platform
+
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QApplication
 from PyQt5.QtCore import Qt, QSize, QPoint, QRectF
-from PyQt5.QtGui import QFont, QColor, QPainter, QPen, QBrush, QPainterPath
+from PyQt5.QtGui import QFont, QColor, QPainter, QPen, QBrush, QPainterPath, QPixmap
 
 try:
     import winreg
 except ImportError:
     winreg = None
+
+def is_icon_file(filepath):
+    """Verifica si el string es una ruta a un archivo de imagen soportado."""
+    if not isinstance(filepath, str):
+        return False
+    extensions = ('.png', '.ico', '.svg', '.jpg', '.jpeg', '.bmp')
+    return filepath.lower().endswith(extensions) and os.path.isfile(filepath)
+
 
 def get_accent_color():
     """Obtiene el color de acento de Windows 10/11."""
@@ -57,12 +66,14 @@ class Win11Button(QPushButton):
 
 class CustomTitleBar(QWidget):
     """Barra de título Windows 11 con color oscurecido del acento del sistema."""
-    def __init__(self, parent, title="Leviathan", icon="🐉"):
+    def __init__(self, parent, title="Leviathan", icon="🐉", hide_max=False):
         super().__init__(parent)
         self.parent = parent
         self.setFixedHeight(34)
+        self._hide_max = hide_max
         
         # Obtenemos el color de acento y lo oscurecemos para resaltar
+
         accent = get_accent_color()
         dark_accent = darken_color(accent, 0.6)
         
@@ -77,8 +88,19 @@ class CustomTitleBar(QWidget):
         layout.setContentsMargins(12, 0, 0, 0)
         layout.setSpacing(10)
         
-        self.icon_lbl = QLabel(icon)
-        self.icon_lbl.setFont(QFont("Segoe UI Emoji", 11))
+        self.icon_lbl = QLabel()
+        if is_icon_file(icon):
+            pixmap = QPixmap(icon)
+            if not pixmap.isNull():
+                pixmap = pixmap.scaled(18, 18, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                self.icon_lbl.setPixmap(pixmap)
+            else:
+                self.icon_lbl.setText(icon)
+                self.icon_lbl.setFont(QFont("Segoe UI Emoji", 11))
+        else:
+            self.icon_lbl.setText(icon)
+            self.icon_lbl.setFont(QFont("Segoe UI Emoji", 11))
+
         self.icon_lbl.setStyleSheet("color: white; background: transparent;")
         
         self.title_lbl = QLabel(title)
@@ -93,8 +115,11 @@ class CustomTitleBar(QWidget):
         
         self.btn_max = Win11Button("max", self)
         self.btn_max.clicked.connect(self._toggle_max)
+        if self._hide_max:
+            self.btn_max.hide()
         
         self.btn_close = Win11Button("close", self)
+
         self.btn_close.clicked.connect(self.parent.close)
         
         layout.addWidget(self.btn_min)

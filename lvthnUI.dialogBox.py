@@ -78,7 +78,8 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     
     # Sincronizamos el icono con el ID de la app para la barra de tareas
-    icon = InmojiTrx("🐉").apply(app)
+    icon_path = os.path.join("app", "lvthnUI.dialogBox-icon.ico")
+    icon = InmojiTrx(icon_path).apply(app)
     
     ventana = MiVentana()
     # Aplicamos el icono también a la ventana (vital para frameless)

@@ -2,9 +2,10 @@ import sys
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
                              QPushButton, QApplication, QFrame)
 from PyQt5.QtCore import Qt, QPropertyAnimation, QEasingCurve, QRect, QPoint, QEvent
-from PyQt5.QtGui import QFont, QColor
+from PyQt5.QtGui import QFont, QColor, QIcon, QPixmap
 
-from .title_bar import CustomTitleBar, get_accent_color
+from .title_bar import CustomTitleBar, get_accent_color, is_icon_file
+
 from .wipeWindow import WipeWindow
 from .lightsOff import LightsOff
 
@@ -59,8 +60,9 @@ class LeviathanDialog(QWidget):
         self.main_layout.setSpacing(0)
         
         # Barra de Título
-        self.title_bar = CustomTitleBar(self, title=title, icon=self._mode_cfg["icon"])
+        self.title_bar = CustomTitleBar(self, title=title, icon=self._mode_cfg["icon"], hide_max=True)
         self.main_layout.addWidget(self.title_bar)
+
         
         # Contenido
         content_frame = QFrame()
@@ -69,8 +71,24 @@ class LeviathanDialog(QWidget):
         content_lay.setSpacing(20)
         
         msg_lay = QHBoxLayout()
-        icon_lbl = QLabel(self._mode_cfg["icon"])
-        icon_lbl.setFont(QFont("Segoe UI Emoji", 32))
+        
+        # Soporte para iconos reales o emojis
+        icon_val = self._mode_cfg["icon"]
+        icon_lbl = QLabel()
+        if is_icon_file(icon_val):
+
+            pixmap = QPixmap(icon_val)
+            if not pixmap.isNull():
+                pixmap = pixmap.scaled(48, 48, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                icon_lbl.setPixmap(pixmap)
+            else:
+                icon_lbl.setText(icon_val)
+                icon_lbl.setFont(QFont("Segoe UI Emoji", 32))
+        else:
+            icon_lbl.setText(icon_val)
+            icon_lbl.setFont(QFont("Segoe UI Emoji", 32))
+
+        
         icon_lbl.setStyleSheet("background: transparent;")
         
         self.msg_lbl = QLabel(message)
