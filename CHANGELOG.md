@@ -1,21 +1,22 @@
 # 📝 Historial de Cambios - Leviathan-UI
 
-## [1.0.3] - 2026-01-23: Sistema i18n y Setup SVG
+## [1.0.3] - 2026-01-23: Soporte Multi-idioma y Mejoras Visuales
 
-### 🏗️ Internacionalización (i18n)
-*   **Nueva Carpeta `lang/`**: Implementación de archivos de idioma `.lv-lng` basados en JSON.
-*   **Soporte Global**: Añadidos paquetes de idioma para Árabe, Chino, Japonés, Coreano, Ruso, Turco, Alemán, Francés, Italiano, Portugués y diversas regiones de Español.
-*   **Lógica de Carga Segura**: El sistema ahora detecta el idioma del SO y valida la existencia del pack antes de iniciar.
+### 🌍 Soporte para muchos idiomas (i18n)
+*   **Nueva carpeta de traducciones**: Ahora los textos están separados en una carpeta llamada `lang/`. Esto hace que sea muy fácil añadir nuevos idiomas en el futuro.
+*   **Disponible en todo el mundo**: ¡Ahora puedes usar la aplicación en casi cualquier idioma! Hemos añadido soporte para Chino, Japonés, Ruso, Alemán, Francés, Portugués y muchas variantes de Español.
+*   **Detección automática**: El programa es inteligente: detecta qué idioma usas en tu computadora y se configura solo para que no tengas que cambiar nada.
 
-### 🎨 Experiencia de Instalación (Setup)
-*   **Iconos SVG**: Integración de SVGs animados para los pasos de Información, Instalación y Finalización.
-*   **Splash UWP en Setup**: El instalador ahora utiliza el sistema KJ302 para mostrar un splash screen moderno al iniciar.
-*   **Modo GhostBlur**: El instalador utiliza el efecto de cristal esmerilado por defecto.
+### 🎨 Un instalador más bonito (Setup)
+*   **Dibujos animados (SVG)**: Hemos añadido iconos que se mueven durante la instalación para que el proceso sea más entretenido y visual.
+*   **Pantalla de bienvenida**: Ahora, al abrir el instalador, verás una pantalla de carga moderna (Splash Screen) antes de empezar.
+*   **Efecto de cristal (GhostBlur)**: El instalador ahora tiene un fondo elegante, transparente y borroso, parecido al estilo de Windows moderno.
 
-### 📦 Distribución
-*   **Soporte `.whl`**: El instalador automatiza la carga de paquetes desde la carpeta `dist/`.
+### 📦 Mejoras internas
+*   **Instalación automática**: Hemos mejorado la forma en la que el programa instala sus archivos internos para que sea más rápido y falle menos.
 
 ---
 
-## [1.0.2] - 2026-01-17: Mejoras de UI Base
-*   Introducción de `LeviathanProgressBar` y soporte mejorado para iconos de imagen en componentes.
+## [1.0.2] - 2026-01-17: Mejoras Visuales Básicas
+*   **Nueva barra de carga**: Añadimos una barra de progreso personalizada (`LeviathanProgressBar`).
+*   **Mejores iconos**: Ahora es más fácil poner imágenes y dibujos dentro de los botones y menús del programa.

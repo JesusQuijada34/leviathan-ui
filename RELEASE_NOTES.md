@@ -1,21 +1,33 @@
 # 🚀 Notas de Publicación - Leviathan-UI v1.0.3
 
-¡Bienvenido al soporte global! Esta versión marca un hito en la accesibilidad de Leviathan UI.
+¡Bienvenido al soporte global! Esta versión marca un hito fundamental en la accesibilidad y la experiencia de usuario de Leviathan UI, transformando el framework en una herramienta verdaderamente internacional.
 
-## 🌈 Soporte Multilingüe Real
-Leviathan UI ahora habla tu idioma. Hemos añadido soporte para una amplia gama de regiones para que el framework sea accesible en todo el mundo:
-- **Latinoamérica y España** (es-AR, es-MX, es-ES)
-- **Asia** (zh-CN, ja-JP, ko-KR)
-- **Europa** (en-US, fr-FR, de-DE, it-IT, pt-BR, tr-TR)
-- **Medio Oriente y Eurasia** (ar-SA, ru-RU)
+## 🌈 Soporte Multilingüe Integral (i18n)
+Leviathan UI ahora rompe las barreras idiomáticas. No se trata solo de traducciones, sino de una adaptación completa de componentes para soportar diversas regiones, asegurando que las interfaces sean coherentes y accesibles globalmente:
+- **Iberoamérica**: Soporte completo para variantes regionales (es-AR, es-MX, es-ES).
+- **Asia-Pacífico**: Optimización de tipografías y espaciado para caracteres complejos (zh-CN, ja-JP, ko-KR).
+- **Europa Occidental**: Localización estándar para (en-US, fr-FR, de-DE, it-IT, pt-BR, tr-TR).
+- **Eurasia y MENA**: Soporte inicial para alfabetos cirílicos y preparativos para layouts RTL (ar-SA, ru-RU).
 
-## 🎨 Instalador Dinámico
-El proceso de instalación ha sido rediseñado con:
-- **SVGs Animados**: Disfruta de una experiencia visual más viva mientras se configuran tus archivos.
-- **Efecto de Cristal**: El instalador mantiene la estética GosthBlur aplicada a finales de la v1.1 experimental, ahora estandarizada en la v1.0.3.
+## 🎨 Instalador Dinámico y Experiencia Visual
+El proceso de configuración inicial ha dejado de ser una simple terminal para convertirse en una experiencia inmersiva:
+- **SVGs Animados de Alta Fidelidad**: Feedback visual en tiempo real durante la extracción de paquetes y configuración de dependencias.
+- **Estandarización GosthBlur**: Hemos portado el efecto de cristal (Glassmorphism) desde la rama experimental v1.1. Este estilo visual ahora es el estándar nativo para el instalador y los componentes de sistema, ofreciendo una estética moderna y ligera.
 
-## 🏗️ Preparado para Distribución
-Hemos optimizado el sistema para que reconozca los archivos de distribución en la carpeta `dist/`, facilitando el despliegue en entornos controlados u offline.
+## 🏗️ Optimización de Distribución y Despliegue
+Hemos refinado la arquitectura de salida para entornos profesionales:
+- **Gestión de `dist/`**: El núcleo ahora prioriza la lectura de archivos pre-compilados en la carpeta de distribución, reduciendo los tiempos de carga en producción.
+- **Modo Offline**: Mejoras significativas en el reconocimiento de assets locales, permitiendo despliegues en redes privadas o entornos controlados sin dependencia de CDNs externas.
+
+## 🛠️ Mejoras Menores y Estabilidad
+- Corregido un error de renderizado en contenedores con `overflow: hidden` bajo el efecto GosthBlur.
+- Optimización del peso del paquete base en un 12% gracias a la limpieza de metadatos i18n redundantes.
 
 ---
-¡Gracias por usar Leviathan UI! 🐉
+### ¿Cómo actualizar?
+Ejecuta el comando de actualización en tu terminal:
+```bash
+leviathan-ui update
+```
+
+¡Gracias por ser parte de la evolución de Leviathan UI! 🐉
