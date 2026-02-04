@@ -163,7 +163,7 @@ class InmersiveSplash(QWidget):
             msg = self._phrases[self._current_step]
             prog = int(((self._current_step + 1) / len(self._phrases)) * 100)
             self.status_lbl.setText(msg)
-            self.pbar.setValue(prog)
+            self.pbar.value = prog
             self._current_step += 1
         else:
             self.timer.stop()
