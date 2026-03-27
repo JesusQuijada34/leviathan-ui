@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cargando…</title>
+  <title>Cargando...</title>
   <link rel="icon" href="https://raw.githubusercontent.com/JesusQuijada34/leviathan-ui/main/app/app-icon.ico" type="image/x-icon" />
   <style>
     :root {
@@ -160,9 +160,9 @@
             <div class="app-right">
               <div class="meta">
                 <div class="title-row">
-                  <h1 class="app-title" id="appTitle">Cargando…</h1>
+                  <h1 class="app-title" id="appTitle">Cargando...</h1>
                 </div>
-                <div class="meta-info" id="metaInfo">…</div>
+                <div class="meta-info" id="metaInfo">...</div>
                 <div class="meta-author" id="metaAuthor"></div>
                 <div class="meta-rate" id="metaRate"></div>
               </div>
@@ -183,7 +183,7 @@
       </div>
       <div class="readme" id="readmeWrap" aria-label="README">
         <div class="readme-inner" id="readmeContent">
-          <p style="color:var(--muted); margin:0">README cargando…</p>
+          <p style="color:var(--muted); margin:0">README cargando...</p>
         </div>
       </div>
     </div>
@@ -295,11 +295,11 @@
 
       // --- DATA LOAD & UI SYNC ---
       (async function(){
-        appTitle.textContent = 'Cargando…';
+        appTitle.textContent = 'Cargando...';
         metaInfo.textContent = '';
         metaAuthor.textContent = '';
         metaRate.textContent = '';
-        document.title = 'Cargando…';
+        document.title = 'Cargando...';
         // PRIORITIZE REMOTE GITHUB RAW
         const detailsCandidates = [
           LOCAL.details
