@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "leviathan-ui"
-version = "1.0.6"
+version = "1.0.4"
 description = "Premium UI framework for PyQt6 with Windows 11 aesthetics, blur effects, i18n support, wheel packaging and modern developer documentation"
 readme = "README.md"
 requires-python = ">=3.8"

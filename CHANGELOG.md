@@ -1,43 +1,31 @@
 # 📝 Historial de Cambios - Leviathan-UI
 
-## [1.0.6] - 2026-04-07: Instalador Profesional Estilo NSIS
+## [1.0.4] - 2026-04-07: Instalador Profesional, PyQt6 y Documentación
 
 ### 🚀 Nuevo Instalador Leviathan-UI Setup
 *   **UI completamente rediseñada**: Instalador profesional estilo NSIS con banners y transiciones pulidas.
-*   **Pantalla de bienvenida con banner vertical**: Usa `assets/splash_setup.png` como banner lateral izquierdo (estilo instaladores clásicos).
-*   **Pantalla de opciones avanzadas**: Checkboxes para modo de instalación (local/remoto), accesos directos (desktop/menú inicio), y opciones avanzadas (force reinstall, upgrade deps).
+*   **Pantalla de bienvenida con banner vertical**: Usa `assets/splash_setup.png` como banner lateral izquierdo.
+*   **Pantalla de opciones avanzadas**: Checkboxes para modo de instalación (local/remoto), accesos directos, y opciones avanzadas.
 *   **Pantalla de instalación con banner superior**: Usa `assets/splash.png` como banner superior durante la instalación.
-*   **Prevención de múltiples instancias**: Usa `QSharedMemory` para evitar que se ejecuten múltiples instaladores simultáneamente.
-*   **Manejo robusto de errores**: Validaciones de conexión a internet, existencia de archivos `.whl`, y logging detallado de la instalación.
-*   **Worker thread para instalación**: La instalación se ejecuta en un `QThread` separado para no bloquear la UI.
-*   **Barra de progreso animada**: Progreso visual con estados de instalación claros.
+*   **Prevención de múltiples instancias**: Usa `QSharedMemory` para evitar múltiples instaladores simultáneos.
+*   **Worker thread para instalación**: Ejecución en `QThread` separado sin bloquear UI.
 
-### 🐛 Correcciones
-*   Instalador ahora maneja correctamente modo local (sin internet) y remoto (con internet).
-*   Validaciones previas antes de iniciar la instalación.
-*   Mejor manejo de errores de pip con logging visible.
-
----
-
-## [1.0.5] - 2026-04-06: Correcciones de Compatibilidad PyQt6 y Scripts de Demo
-
-### 🐛 Errores arreglados
-*   **Compatibilidad PyQt6 completa**: Corregidos todos los `Qt.AlignCenter` → `Qt.AlignmentFlag.AlignCenter`.
-*   **API deprecada de locale**: Reemplazado `locale.getdefaultlocale()` (deprecado en Python 3.11+) con `locale.getlocale()` compatible.
-*   **Método exec() moderno**: Todos los `app.exec_()` cambiados a `app.exec()` (sintaxis PyQt6).
-*   **Scripts de demo funcionales**: `lvthnUi.ghost.py`, `lvthnUi.ghostBlur.py`, `lvthnUi.polished.py`, `lvthnUI.dialogBox.py` ahora ejecutan sin errores.
+### 🐛 Correcciones PyQt6
+*   **Compatibilidad PyQt6 completa**: `Qt.AlignCenter` → `Qt.AlignmentFlag.AlignCenter`.
+*   **API deprecada de locale**: `locale.getdefaultlocale()` → `locale.getlocale()` (Python 3.11+).
+*   **Método exec() moderno**: `app.exec_()` → `app.exec()`.
+*   **Scripts de demo funcionales**: Todos los demos ahora ejecutan sin errores.
 
 ### ✨ Mejoras visuales
-*   **TitleBar transparente**: La `CustomTitleBar` ahora usa `background-color: transparent` para mejor integración visual.
-*   **Fondos transparentes en controles**: Corrección de QSS en `packagemaker` para eliminar fondos opacos `#121822` detrás de labels y radio buttons.
+*   **TitleBar transparente**: `CustomTitleBar` con `background-color: transparent`.
+*   **Fondos transparentes en controles**: Corrección de QSS en `packagemaker`.
 
 ### 📚 Documentación
 *   README actualizado con nueva versión y mejor estructura.
 *   FAQ completo añadido con respuestas a problemas comunes.
+*   Clases del instalador separadas en `installer_classes/`.
 
 ---
-
-## [1.0.4] - 2026-04-05: PyQt6, empaquetado de ruedas y documentación completa
 
 ### 🚀 Mejoras principales
 *   Migración total a **PyQt6** para compatibilidad con las últimas herramientas de Qt.
