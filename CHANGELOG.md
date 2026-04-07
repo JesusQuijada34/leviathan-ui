@@ -1,5 +1,24 @@
 # 📝 Historial de Cambios - Leviathan-UI
 
+## [1.0.6] - 2026-04-07: Instalador Profesional Estilo NSIS
+
+### 🚀 Nuevo Instalador Leviathan-UI Setup
+*   **UI completamente rediseñada**: Instalador profesional estilo NSIS con banners y transiciones pulidas.
+*   **Pantalla de bienvenida con banner vertical**: Usa `assets/splash_setup.png` como banner lateral izquierdo (estilo instaladores clásicos).
+*   **Pantalla de opciones avanzadas**: Checkboxes para modo de instalación (local/remoto), accesos directos (desktop/menú inicio), y opciones avanzadas (force reinstall, upgrade deps).
+*   **Pantalla de instalación con banner superior**: Usa `assets/splash.png` como banner superior durante la instalación.
+*   **Prevención de múltiples instancias**: Usa `QSharedMemory` para evitar que se ejecuten múltiples instaladores simultáneamente.
+*   **Manejo robusto de errores**: Validaciones de conexión a internet, existencia de archivos `.whl`, y logging detallado de la instalación.
+*   **Worker thread para instalación**: La instalación se ejecuta en un `QThread` separado para no bloquear la UI.
+*   **Barra de progreso animada**: Progreso visual con estados de instalación claros.
+
+### 🐛 Correcciones
+*   Instalador ahora maneja correctamente modo local (sin internet) y remoto (con internet).
+*   Validaciones previas antes de iniciar la instalación.
+*   Mejor manejo de errores de pip con logging visible.
+
+---
+
 ## [1.0.5] - 2026-04-06: Correcciones de Compatibilidad PyQt6 y Scripts de Demo
 
 ### 🐛 Errores arreglados
