@@ -1,9 +1,9 @@
 import os
 import platform
 
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QApplication
-from PyQt5.QtCore import Qt, QSize, QPoint, QRectF
-from PyQt5.QtGui import QFont, QColor, QPainter, QPen, QBrush, QPainterPath, QPixmap
+from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton
+from PyQt6.QtCore import Qt, QSize, QPoint, QRectF
+from PyQt6.QtGui import QFont, QColor, QPainter, QPen, QBrush, QPainterPath, QPixmap
 
 try:
     import winreg
@@ -36,18 +36,40 @@ def darken_color(hex_color, factor=0.7):
     r, g, b = int(r * factor), int(g * factor), int(b * factor)
     return f"#{r:02x}{g:02x}{b:02x}"
 
+class BackButton(QPushButton):
+    """Botón de retroceso con estilo UWP para modo táctil."""
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setFixedSize(38, 34)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setToolTip("Atrás")
+        self.setStyleSheet("background: transparent; border: none;")
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        if self.underMouse():
+            painter.fillRect(self.rect(), QColor("rgba(255,255,255,0.08)"))
+        pen = QPen(QColor("white"), 2)
+        painter.setPen(pen)
+        rect = self.rect().adjusted(10, 10, -10, -10)
+        painter.drawLine(rect.right(), rect.center().y(), rect.left(), rect.center().y())
+        painter.drawLine(rect.left() + 8, rect.top(), rect.left(), rect.center().y())
+        painter.drawLine(rect.left() + 8, rect.bottom(), rect.left(), rect.center().y())
+
+
 class Win11Button(QPushButton):
     """Boton con estilo Windows 11 y dibujo SVG nativo."""
     def __init__(self, btn_type, parent=None):
         super().__init__(parent)
         self._type = btn_type # "min", "max", "close"
         self.setFixedSize(46, 32)
-        self.setCursor(Qt.PointingHandCursor)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.hover_color = "#e81123" if btn_type == "close" else "rgba(255, 255, 255, 0.1)"
         
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         
         # Fondo en Hover
         if self.underMouse():
@@ -66,23 +88,17 @@ class Win11Button(QPushButton):
 
 class CustomTitleBar(QWidget):
     """Barra de título Windows 11 con color oscurecido del acento del sistema."""
-    def __init__(self, parent, title="Leviathan", icon="🐉", hide_max=False):
+    def __init__(self, parent, title="Leviathan", icon="🐉", hide_max=False, back_callback=None):
         super().__init__(parent)
         self.parent = parent
         self.setFixedHeight(34)
         self._hide_max = hide_max
+        self._back_callback = back_callback
         
         # Obtenemos el color de acento y lo oscurecemos para resaltar
 
-        accent = get_accent_color()
-        dark_accent = darken_color(accent, 0.6)
-        
-        # Fondo sólido oscurecido que resalta sobre el cuerpo de la ventana
-        self.setStyleSheet(f"""
-            background-color: {dark_accent};
-            border-top-left-radius: 25px;
-            border-top-right-radius: 25px;
-        """)
+        # Fondo transparente - usa el fondo de la ventana principal
+        self.setStyleSheet("background-color: transparent; border: none;")
         
         layout = QHBoxLayout(self)
         layout.setContentsMargins(12, 0, 0, 0)
@@ -92,7 +108,7 @@ class CustomTitleBar(QWidget):
         if is_icon_file(icon):
             pixmap = QPixmap(icon)
             if not pixmap.isNull():
-                pixmap = pixmap.scaled(18, 18, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                pixmap = pixmap.scaled(18, 18, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
                 self.icon_lbl.setPixmap(pixmap)
             else:
                 self.icon_lbl.setText(icon)
@@ -104,8 +120,15 @@ class CustomTitleBar(QWidget):
         self.icon_lbl.setStyleSheet("color: white; background: transparent;")
         
         self.title_lbl = QLabel(title)
-        self.title_lbl.setStyleSheet("color: white; background: transparent; font-family: 'Segoe UI Variable Text', 'Segoe UI'; font-size: 12px; font-weight: 500;")
+        self.title_lbl.setStyleSheet("color: white; background: transparent; font-family: 'Segoe UI Variable', 'Segoe UI', sans-serif; font-size: 12px; font-weight: 500;")
         
+        if back_callback:
+            self.btn_back = BackButton(self)
+            self.btn_back.clicked.connect(back_callback)
+            layout.addWidget(self.btn_back)
+        else:
+            self.btn_back = None
+
         layout.addWidget(self.icon_lbl)
         layout.addWidget(self.title_lbl)
         layout.addStretch()
@@ -126,12 +149,19 @@ class CustomTitleBar(QWidget):
         layout.addWidget(self.btn_max)
         layout.addWidget(self.btn_close)
 
+    def enable_back_button(self, callback):
+        if self.btn_back is None:
+            self.btn_back = BackButton(self)
+            self.btn_back.clicked.connect(callback)
+            self.layout().insertWidget(0, self.btn_back)
+        self.btn_back.setVisible(True)
+
     def _toggle_max(self):
         if self.parent.isMaximized(): self.parent.showNormal()
         else: self.parent.showMaximized()
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton:
             handle = self.parent.windowHandle()
             if handle: handle.startSystemMove()
             event.accept()

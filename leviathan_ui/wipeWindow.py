@@ -1,9 +1,9 @@
 import sys
 import os
 import ctypes
-from PyQt5.QtWidgets import QWidget, QApplication, QVBoxLayout, QGraphicsBlurEffect
-from PyQt5.QtCore import Qt, QRect, QRectF, QObject, QEvent
-from PyQt5.QtGui import QColor, QPainter, QBrush, QPen
+from PyQt6.QtWidgets import QWidget, QApplication, QVBoxLayout, QGraphicsBlurEffect
+from PyQt6.QtCore import Qt, QRect, QRectF, QObject, QEvent
+from PyQt6.QtGui import QColor, QPainter, QBrush, QPen, QPixmap, QImage
 import difflib
 
 # Importamos el capturador de acento desde la librería base
@@ -63,8 +63,8 @@ class WipeWindow(QObject):
         self.setParent(widget)
         
         # 1. Window Configuration
-        widget.setWindowFlags(widget.windowFlags() | Qt.FramelessWindowHint)
-        widget.setAttribute(Qt.WA_TranslucentBackground)
+        widget.setWindowFlags(widget.windowFlags() | Qt.WindowType.FramelessWindowHint)
+        widget.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         
         # 2. Install event filter for custom painting
         widget.installEventFilter(self)
@@ -94,8 +94,7 @@ class WipeWindow(QObject):
             except: pass
 
         # 6. Apply Windows Acrylic/Blur effect for ghostBlur mode
-        if sys.platform == "win32" and self._mode == "ghostBlur":
-
+        if self._mode == "ghostBlur":
             try:
                 hWnd = int(widget.winId())
                 # Enable blur behind (DWM_BLURBEHIND)
@@ -134,14 +133,14 @@ class WipeWindow(QObject):
         return self
 
     def eventFilter(self, obj, event):
-        if obj == self._target and event.type() == QEvent.Paint:
+        if obj == self._target and event.type() == QEvent.Type.Paint:
             self._paint_logic(obj)
             return False # Let children paint on top
         return super().eventFilter(obj, event)
 
     def _paint_logic(self, widget):
         painter = QPainter(widget)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         
         if self._mode == "ghost":
             painter.end()
@@ -150,18 +149,18 @@ class WipeWindow(QObject):
         if self._mode == "mica":
             # For Mica, we need to let the system backdrop show through.
             # Painting a very subtle transparent layer can help with visibility of content.
-            painter.setPen(Qt.NoPen)
+            painter.setPen(Qt.PenStyle.NoPen)
             painter.setBrush(QBrush(QColor(0, 0, 0, 1))) 
             painter.drawRect(widget.rect())
             painter.end()
             return
 
         if self._mode == "ghostBlur":
-
-            # Paint a semi-transparent tinted background for the blur effect
-            painter.setPen(Qt.NoPen)
-            painter.setBrush(QBrush(QColor(0, 0, 0, 30)))  # Very subtle dark tint
+            painter.setPen(Qt.PenStyle.NoPen)
+            painter.setBrush(QBrush(QColor(255, 255, 255, 35)))  # Light glass tint
             painter.drawRoundedRect(widget.rect(), self._radius, self._radius)
+            painter.setBrush(QBrush(QColor(255, 255, 255, 20)))
+            painter.drawRoundedRect(widget.rect().adjusted(1, 1, -1, -1), self._radius - 1, self._radius - 1)
             painter.end()
             return
 
@@ -173,13 +172,13 @@ class WipeWindow(QObject):
         for i in range(shadow_offset):
             opacity = int((140 / shadow_offset) * (shadow_offset - i) * 0.3)
             painter.setPen(QPen(QColor(0, 0, 0, opacity), 1))
-            painter.setBrush(Qt.NoBrush)
+            painter.setBrush(Qt.BrushStyle.NoBrush)
             shadow_rect = full_rect.adjusted(-i, -i, i, i)
             painter.drawRoundedRect(shadow_rect, self._radius + i, self._radius + i)
 
         # Solid Background fills the ENTIRE widget rect
         bg_color = get_accent_color() if self._bg_source == "auto" else self._bg_source
-        painter.setPen(Qt.NoPen)
+        painter.setPen(Qt.PenStyle.NoPen)
         painter.setBrush(QBrush(QColor(bg_color)))
         painter.drawRoundedRect(full_rect, self._radius, self._radius)
         painter.end()

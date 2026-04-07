@@ -1,7 +1,7 @@
 import sys
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
-from PyQt5.QtCore import Qt, QTimer, QRect, QRectF, QPropertyAnimation, pyqtProperty
-from PyQt5.QtGui import QColor, QPainter, QBrush, QPen, QLinearGradient
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel
+from PyQt6.QtCore import Qt, QTimer, QRect, QRectF, QPropertyAnimation, pyqtProperty
+from PyQt6.QtGui import QColor, QPainter, QBrush, QPen, QLinearGradient
 
 from .title_bar import get_accent_color
 
@@ -52,10 +52,10 @@ class LeviathanProgressBar(QWidget):
         
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         
         # Fondo
-        painter.setPen(Qt.NoPen)
+        painter.setPen(Qt.PenStyle.NoPen)
         painter.setBrush(QBrush(QColor(40, 40, 40)))
         painter.drawRoundedRect(self.rect(), 4, 4)
         

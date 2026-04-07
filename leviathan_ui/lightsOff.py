@@ -1,7 +1,7 @@
 import sys
-from PyQt5.QtWidgets import QWidget, QGraphicsDropShadowEffect
-from PyQt5.QtCore import Qt, QPropertyAnimation, QEasingCurve, QObject, QEvent
-from PyQt5.QtGui import QColor
+from PyQt6.QtWidgets import QWidget, QGraphicsDropShadowEffect
+from PyQt6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QObject, QEvent
+from PyQt6.QtGui import QColor
 
 class LightsOff(QObject):
     """
@@ -21,7 +21,7 @@ class LightsOff(QObject):
         # Animación de intensidad
         self.anim = QPropertyAnimation(self.glow, b"blurRadius")
         self.anim.setDuration(400)
-        self.anim.setEasingCurve(QEasingCurve.OutCubic)
+        self.anim.setEasingCurve(QEasingCurve.Type.OutCubic)
         self._intensity = 25
         
         # Instalamos el filtro de eventos
@@ -34,9 +34,9 @@ class LightsOff(QObject):
 
     def eventFilter(self, obj, event):
         if obj == self.target:
-            if event.type() == QEvent.Enter:
+            if event.type() == QEvent.Type.Enter:
                 self.illuminate()
-            elif event.type() == QEvent.Leave:
+            elif event.type() == QEvent.Type.Leave:
                 self.extinguish()
         return super().eventFilter(obj, event)
 

@@ -111,8 +111,8 @@ class InmojiTrx:
     @staticmethod
     def apply_to_app(obj, source, app_id=None):
         """Aplica el icono a una QApplication o QWidget."""
-        from PyQt5.QtGui import QIcon
-        from PyQt5.QtWidgets import QApplication, QWidget
+        from PyQt6.QtGui import QIcon
+        from PyQt6.QtWidgets import QApplication, QWidget
         
         # 1. Registro forzoso de AppID para la barra de tareas
         if sys.platform == "win32":

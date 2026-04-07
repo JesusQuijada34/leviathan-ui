@@ -1,8 +1,8 @@
 import sys
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
-                             QPushButton, QApplication, QFrame)
-from PyQt5.QtCore import Qt, QPropertyAnimation, QEasingCurve, QRect, QPoint, QEvent
-from PyQt5.QtGui import QFont, QColor, QIcon, QPixmap
+from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
+                             QPushButton, QFrame)
+from PyQt6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QRect, QPoint, QEvent
+from PyQt6.QtGui import QFont, QColor, QIcon, QPixmap
 
 from .title_bar import CustomTitleBar, get_accent_color, is_icon_file
 
@@ -33,8 +33,8 @@ class LeviathanDialog(QWidget):
         
         self.setWindowTitle(title)
         self.setFixedSize(450, 240)
-        self.setWindowModality(Qt.WindowModal if parent else Qt.NonModal)
-        self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
+        self.setWindowModality(Qt.WindowModality.WindowModal if parent else Qt.WindowModality.NonModal)
+        self.setWindowFlags(self.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
         
         # 1. Overlay Blur (Cubre la ventana principal)
         if self._parent_win:
@@ -79,7 +79,7 @@ class LeviathanDialog(QWidget):
 
             pixmap = QPixmap(icon_val)
             if not pixmap.isNull():
-                pixmap = pixmap.scaled(48, 48, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                pixmap = pixmap.scaled(48, 48, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
                 icon_lbl.setPixmap(pixmap)
             else:
                 icon_lbl.setText(icon_val)
@@ -148,7 +148,7 @@ class LeviathanDialog(QWidget):
         self.fade_anim.setDuration(350)
         self.fade_anim.setStartValue(0)
         self.fade_anim.setEndValue(1)
-        self.fade_anim.setEasingCurve(QEasingCurve.OutCubic)
+        self.fade_anim.setEasingCurve(QEasingCurve.Type.OutCubic)
 
     def _update_position(self):
         if self._parent_win:
@@ -158,7 +158,7 @@ class LeviathanDialog(QWidget):
     def eventFilter(self, obj, event):
         # Sincronizar overlay con el padre si este cambia de tamaño
         try:
-            if obj == self._parent_win and event.type() == QEvent.Resize:
+            if obj == self._parent_win and event.type() == QEvent.Type.Resize:
                 if self.overlay: 
                     self.overlay.setGeometry(self._parent_win.rect())
         except: pass

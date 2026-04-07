@@ -1,5 +1,38 @@
 # 📝 Historial de Cambios - Leviathan-UI
 
+## [1.0.5] - 2026-04-06: Correcciones de Compatibilidad PyQt6 y Scripts de Demo
+
+### 🐛 Errores arreglados
+*   **Compatibilidad PyQt6 completa**: Corregidos todos los `Qt.AlignCenter` → `Qt.AlignmentFlag.AlignCenter`.
+*   **API deprecada de locale**: Reemplazado `locale.getdefaultlocale()` (deprecado en Python 3.11+) con `locale.getlocale()` compatible.
+*   **Método exec() moderno**: Todos los `app.exec_()` cambiados a `app.exec()` (sintaxis PyQt6).
+*   **Scripts de demo funcionales**: `lvthnUi.ghost.py`, `lvthnUi.ghostBlur.py`, `lvthnUi.polished.py`, `lvthnUI.dialogBox.py` ahora ejecutan sin errores.
+
+### ✨ Mejoras visuales
+*   **TitleBar transparente**: La `CustomTitleBar` ahora usa `background-color: transparent` para mejor integración visual.
+*   **Fondos transparentes en controles**: Corrección de QSS en `packagemaker` para eliminar fondos opacos `#121822` detrás de labels y radio buttons.
+
+### 📚 Documentación
+*   README actualizado con nueva versión y mejor estructura.
+*   FAQ completo añadido con respuestas a problemas comunes.
+
+---
+
+## [1.0.4] - 2026-04-05: PyQt6, empaquetado de ruedas y documentación completa
+
+### 🚀 Mejoras principales
+*   Migración total a **PyQt6** para compatibilidad con las últimas herramientas de Qt.
+*   Construcción de paquetes **wheel** para distribución más simple en entornos Python.
+*   Nueva documentación para desarrolladores, FAQ y guía de publicación.
+*   Nueva plantilla `.env` y `.gitignore` modernizado para facilitar el desarrollo local.
+
+### 🧠 Experiencia de desarrollo
+*   Documentación reorganizada en `docs/` con **Overview**, **FAQ** y un **post listo para la comunidad**.
+*   Instrucciones claras para crear el paquete y publicar la versión.
+*   Mejoras de consistencia en el README para proyectos y colaboradores.
+
+---
+
 ## [1.0.3] - 2026-01-23: Soporte Multi-idioma y Mejoras Visuales
 
 ### 🌍 Soporte para muchos idiomas (i18n)

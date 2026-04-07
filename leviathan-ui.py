@@ -7,18 +7,19 @@ import threading
 import json
 import locale
 import requests
-from PyQt5.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, 
+from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, 
                              QLabel, QPushButton, QStackedWidget, QFrame, 
                              QCheckBox, QTextEdit, QScrollArea)
-from PyQt5.QtCore import Qt, QPropertyAnimation, QEasingCurve, QPoint, pyqtSignal, QObject, QTimer
-from PyQt5.QtGui import QFont, QColor, QPixmap
-from PyQt5.QtSvg import QSvgWidget
+from PyQt6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QPoint, pyqtSignal, QObject, QTimer
+from PyQt6.QtGui import QFont, QColor, QPixmap
+from PyQt6.QtSvg import QSvgWidget
 
 from leviathan_ui.wipeWindow import WipeWindow
 from leviathan_ui.title_bar import CustomTitleBar, get_accent_color
 from leviathan_ui.dialogs import LeviathanDialog
 from leviathan_ui.progress_bar import LeviathanProgressBar
 from leviathan_ui.splash import InmersiveSplash
+from leviathan_ui.touchscreen import TouchScreen
 
 # --- Sistema de i18n ---
 class I18nManager:
@@ -28,19 +29,19 @@ class I18nManager:
 
     def load_language(self):
         try:
-            # 1. Detectar idioma del SO
+            # 1. Detectar idioma del SO (compatible con Python 3.11+)
             try:
-                # Intentar getdefaultlocale() primero (mejor para Windows)
-                import warnings
-                with warnings.catch_warnings():
-                    warnings.simplefilter("ignore", DeprecationWarning)
-                    lang_tuple = locale.getdefaultlocale()
+                lang_tuple = locale.getlocale()
                 default_locale = lang_tuple[0] if lang_tuple and lang_tuple[0] else None
                 
-                # Fallback a getlocale() si getdefaultlocale() falla
+                # Fallback a locale.setlocale si getlocale() no funciona
                 if not default_locale:
-                    lang_tuple = locale.getlocale()
-                    default_locale = lang_tuple[0] if lang_tuple[0] else "en_US"
+                    import platform
+                    if platform.system() == "Windows":
+                        # En Windows, usar configuración regional del sistema
+                        default_locale = locale.getdefaultlocale()[0] if hasattr(locale, 'getdefaultlocale') else "en_US"
+                    else:
+                        default_locale = "en_US"
             except:
                 default_locale = "en_US"
 
@@ -100,7 +101,7 @@ class PageBase(QWidget):
         if os.path.exists(svg_path):
             svg_widget = QSvgWidget(svg_path)
             svg_widget.setFixedSize(80, 80)
-            self.layout.addWidget(svg_widget, alignment=Qt.AlignCenter)
+            self.layout.addWidget(svg_widget, alignment=Qt.AlignmentFlag.AlignCenter)
             return svg_widget
         return None
 
@@ -124,9 +125,9 @@ class WelcomePage(PageBase):
         origin.setFont(QFont("Segoe UI", 10))
         origin.setStyleSheet("color: #aaaaaa; background: rgba(255,255,255,0.06); padding: 15px; border-radius: 10px;")
         
-        self.layout.addWidget(title, alignment=Qt.AlignCenter)
+        self.layout.addWidget(title, alignment=Qt.AlignmentFlag.AlignCenter)
         self.layout.addSpacing(5)
-        self.layout.addWidget(desc, alignment=Qt.AlignCenter)
+        self.layout.addWidget(desc, alignment=Qt.AlignmentFlag.AlignCenter)
         self.layout.addSpacing(15)
         self.layout.addWidget(origin)
         self.layout.addStretch()
@@ -181,7 +182,7 @@ class LicensePage(PageBase):
         self.accept_checkbox = QCheckBox(i18n.get("license_accept"))
         self.accept_checkbox.setFont(QFont("Segoe UI", 10))
         self.accept_checkbox.setFocusPolicy(Qt.NoFocus)
-        self.accept_checkbox.setCursor(Qt.PointingHandCursor)
+        self.accept_checkbox.setCursor(Qt.CursorShape.PointingHandCursor)
         self.accept_checkbox.setStyleSheet("""
             QCheckBox {
                 color: white;
@@ -253,7 +254,7 @@ class AnnouncementsPage(PageBase):
         """)
         self.announcements_label.setMinimumHeight(200)
             
-        self.layout.addWidget(announcements_title, alignment=Qt.AlignCenter)
+        self.layout.addWidget(announcements_title, alignment=Qt.AlignmentFlag.AlignCenter)
         self.layout.addSpacing(20)
         self.layout.addWidget(self.announcements_label)
         self.layout.addStretch()
@@ -310,18 +311,22 @@ class FinalPage(PageBase):
         tip.setStyleSheet("color: #aaaaaa; background: rgba(46, 204, 113, 0.1); padding: 10px; border-radius: 8px;")
         
         self.layout.addStretch()
-        self.layout.addWidget(title, alignment=Qt.AlignCenter)
-        self.layout.addWidget(msg, alignment=Qt.AlignCenter)
+        self.layout.addWidget(title, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.layout.addWidget(msg, alignment=Qt.AlignmentFlag.AlignCenter)
         self.layout.addSpacing(20)
-        self.layout.addWidget(tip, alignment=Qt.AlignCenter)
+        self.layout.addWidget(tip, alignment=Qt.AlignmentFlag.AlignCenter)
         self.layout.addStretch()
 
 # --- Ventana Principal del Instalador ---
 class LeviathanInstaller(QWidget):
     def __init__(self):
         super().__init__()
-        self.setFixedSize(720, 540)
-        self.setWindowFlags(Qt.FramelessWindowHint | Qt.Window)
+        self.touch_driver = TouchScreen(self)
+        if self.touch_driver.enabled:
+            self.setMinimumSize(720, 540)
+        else:
+            self.setFixedSize(720, 540)
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.Window)
         
         # 1. Efecto GhostBlur (v1.0.3 estándar)
         WipeWindow.create().set_mode("ghostBlur").set_blur(40).set_radius(22).apply(self)
@@ -332,9 +337,18 @@ class LeviathanInstaller(QWidget):
         self.root_layout.setContentsMargins(0, 0, 0, 0)
         self.root_layout.setSpacing(0)
         
-        self.title_bar = CustomTitleBar(self, title=f"Leviathan UI v1.0.3 Setup", icon="app/app-icon.ico", hide_max=True)
+        self.title_bar = CustomTitleBar(
+            self,
+            title=f"Leviathan UI v1.0.3 Setup",
+            icon="app/app-icon.ico",
+            hide_max=True,
+            back_callback=self.go_back if self.touch_driver.enabled else None
+        )
         self.title_bar.setStyleSheet("background: transparent;")
         self.root_layout.addWidget(self.title_bar)
+        self.page_history = []
+        if self.touch_driver.enabled:
+            self.touch_driver.prepare_back_button(self.title_bar, self.go_back)
         
         self.page_container = QStackedWidget()
         self.root_layout.addWidget(self.page_container)
@@ -367,7 +381,7 @@ class LeviathanInstaller(QWidget):
         self.btn_next.setFixedSize(150, 36)
         self.btn_next.setFocusPolicy(Qt.NoFocus)
         self.btn_next.setFont(QFont("Segoe UI", 10, QFont.Bold))
-        self.btn_next.setCursor(Qt.PointingHandCursor)
+        self.btn_next.setCursor(Qt.CursorShape.PointingHandCursor)
         self.apply_btn_style()
         self.btn_next.clicked.connect(self.handle_next)
         
@@ -384,6 +398,10 @@ class LeviathanInstaller(QWidget):
         self.signals.install_finished.connect(self.on_install_completed)
         self.signals.announcements_loaded.connect(self.pages[3].update_announcements)
         
+        if self.touch_driver.enabled:
+            self.touch_driver.apply_touch_layout(self)
+            self.update_back_button()
+
         # Cargar anuncios en segundo plano
         threading.Thread(target=self.load_announcements, daemon=True).start()
 
@@ -527,7 +545,15 @@ class LeviathanInstaller(QWidget):
             self.progress_bar.setMarquee(False)
             self.progress_bar.setRange(0, 100)
 
-    def animate_page(self, index):
+    def animate_page(self, index, save_history=True):
+        if self.touch_driver.enabled and save_history:
+            current = self.page_container.currentWidget()
+            if current is not None:
+                snapshot = self.touch_driver.capture_snapshot(current)
+                if snapshot is not None:
+                    self.page_history.append((self.page_container.currentIndex(), snapshot))
+                    self.update_back_button()
+
         new_page = self.page_container.widget(index)
         self.page_container.setCurrentIndex(index)
         self.anim = QPropertyAnimation(new_page, b"pos")
@@ -544,6 +570,30 @@ class LeviathanInstaller(QWidget):
         self.btn_next.setText(i18n.get("btn_finish"))
         self._current_step = 5
         self.animate_page(self._current_step)
+
+    def go_back(self):
+        if not self.touch_driver.enabled or not self.page_history:
+            return
+        prev_index, snapshot = self.page_history.pop()
+        self.page_container.setCurrentIndex(prev_index)
+        self.animate_page(prev_index, save_history=False)
+        self.touch_driver.animate_snapshot_transition(snapshot)
+        self._current_step = prev_index
+        self.update_back_button()
+        if prev_index == 0:
+            self.btn_next.setText(i18n.get("btn_begin"))
+        else:
+            self.btn_next.setText(i18n.get("btn_next"))
+
+    def update_back_button(self):
+        if getattr(self.title_bar, 'btn_back', None) is None:
+            return
+        self.title_bar.btn_back.setVisible(bool(self.page_history))
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        if self.touch_driver.enabled and not self.isFullScreen():
+            self.showFullScreen()
 
     def load_announcements(self):
         """Carga anuncios desde una API (simulado)"""
@@ -607,8 +657,8 @@ class LeviathanInstaller(QWidget):
             
             # 1. Base Dependencies
             self._run_command(
-                [python_exe, "-m", "pip", "install", "PyQt5", "Pillow", "--upgrade"],
-                i18n.get("install_preparing") + " (PyQt5, Pillow)",
+                [python_exe, "-m", "pip", "install", "PyQt6", "Pillow", "--upgrade"],
+                i18n.get("install_preparing") + " (PyQt6, Pillow)",
                 30
             )
             
@@ -660,14 +710,16 @@ if __name__ == "__main__":
     if not os.path.exists(icon_p): # Generar dummy si no está
         with open(icon_p, "wb") as f: f.write(b"") 
 
-    # Configurar splash con color del sistema y duración de 3 segundos
-    splash = InmersiveSplash(splash_type="UWP", logo=os.path.abspath(icon_p), color="auto")
+    window = LeviathanInstaller()
     
-    def start_installer():
-        window = LeviathanInstaller()
-        window.show()
+    # La ventana se muestra con su opacidad normal para que se pinte en fondo
+    window.show()
 
-    splash.on_finish(start_installer)
+    def reveal_installer():
+        pass # La ventana ya está mostrada y lista debajo del splash
+
+    splash = InmersiveSplash(parent=window, splash_type="UWP", logo=os.path.abspath(icon_p), color="auto")
+    splash.on_finish(reveal_installer)
     splash.launch()
-    
-    sys.exit(app.exec_())
+
+    sys.exit(app.exec())

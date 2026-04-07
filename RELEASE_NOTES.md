@@ -1,6 +1,17 @@
-# 🚀 Notas de Publicación - Leviathan-UI v1.0.3
+# 🚀 Notas de Publicación - Leviathan-UI v1.0.4
 
-¡Bienvenido al soporte global! Esta versión marca un hito fundamental en la accesibilidad y la experiencia de usuario de Leviathan UI, transformando el framework en una herramienta verdaderamente internacional.
+Esta versión de Leviathan UI se enfoca en compatibilidad, empaquetado y documentación para desarrolladores.
+
+## Cambios clave en 1.0.4
+
+- Migración completa a **PyQt6**.
+- Generación de paquete wheel (`dist/leviathan_ui-1.0.4-py3-none-any.whl`).
+- Documentación nueva en `docs/` y guía de publicación a PyPI.
+- `.env` de ejemplo para desarrollar con variables locales.
+- `pyproject.toml` actualizado con metadata de paquete y dependencias.
+- `details.xml` actualizado para reflejar el nuevo nombre y versión.
+
+---
 
 ## 🌈 Soporte Multilingüe Integral (i18n)
 Leviathan UI ahora rompe las barreras idiomáticas. No se trata solo de traducciones, sino de una adaptación completa de componentes para soportar diversas regiones, asegurando que las interfaces sean coherentes y accesibles globalmente:

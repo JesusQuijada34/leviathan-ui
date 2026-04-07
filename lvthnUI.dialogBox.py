@@ -1,6 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel
-from PyQt5.QtCore import Qt
+from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel
+from PyQt6.QtCore import Qt
 from leviathan_ui import WipeWindow, CustomTitleBar, LeviathanDialog, InmojiTrx
 
 class MiVentana(QWidget):
@@ -20,7 +20,7 @@ class MiVentana(QWidget):
         
         content = QWidget()
         content_lay = QVBoxLayout(content)
-        content_lay.setAlignment(Qt.AlignCenter)
+        content_lay.setAlignment(Qt.AlignmentFlag.AlignCenter)
         content_lay.setSpacing(20)
         
         label = QLabel("PRUEBA DE COMPONENTES DE MENSAJE")
@@ -86,4 +86,4 @@ if __name__ == "__main__":
     ventana.setWindowIcon(icon)
     ventana.show()
     
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

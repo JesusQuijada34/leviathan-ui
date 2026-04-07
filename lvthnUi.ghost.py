@@ -1,6 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QPushButton, QVBoxLayout, QWidget, QLabel
-from PyQt5.QtCore import Qt
+from PyQt6.QtWidgets import QApplication, QPushButton, QVBoxLayout, QWidget, QLabel
+from PyQt6.QtCore import Qt
 from leviathan_ui import (
     InmersiveSplash, 
     InmojiTrx, 
@@ -32,11 +32,11 @@ class MiAppPrincipal(QWidget):
         
         content = QWidget()
         content_lay = QVBoxLayout(content)
-        content_lay.setAlignment(Qt.AlignCenter)
+        content_lay.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
         label = QLabel("Test de Leviathan-UI: Ghost Mode")
         label.setStyleSheet("color: white; font-size: 24px; font-weight: bold; font-family: 'Segoe UI';")
-        content_lay.addWidget(label, alignment=Qt.AlignCenter)
+        content_lay.addWidget(label, alignment=Qt.AlignmentFlag.AlignCenter)
         
         self.btn = QPushButton("Cerrar app")
         self.btn.setFixedSize(280, 50)
@@ -54,7 +54,7 @@ class MiAppPrincipal(QWidget):
                 color: black;
             }
         """)
-        content_lay.addWidget(self.btn, alignment=Qt.AlignCenter)
+        content_lay.addWidget(self.btn, alignment=Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(content, 1)
 
         self.btn.clicked.connect(self.close)
@@ -88,4 +88,4 @@ if __name__ == "__main__":
     # ¡Despegue!
     splash.start()
     
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
