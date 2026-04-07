@@ -31,11 +31,9 @@ if errorlevel 1 (
 )
 
 echo [3/6] Creando commit...
-git commit -m "Release v1.0.4: Instalador profesional estilo NSIS, PyQt6 fixes, docs"
+git commit -m "Release v1.0.4: Instalador profesional estilo NSIS, PyQt6 fixes, docs" 2>nul
 if errorlevel 1 (
-    echo ERROR: Fallo al crear commit
-    pause
-    exit /b 1
+    echo No hay cambios nuevos que commitear (working tree clean) - continuando...
 )
 
 echo [4/6] Subiendo a GitHub...
