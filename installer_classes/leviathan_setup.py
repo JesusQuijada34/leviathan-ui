@@ -64,7 +64,7 @@ class LeviathanSetup(QWidget):
         main_layout.setSpacing(0)
         
         # Barra de título
-        self.title_bar = CustomTitleBar(self, title="Leviathan-UI v1.0.4 Setup", hide_max=True)
+        self.title_bar = CustomTitleBar(self, title="Leviathan-UI v1.0.5 Setup", hide_max=True)
         self.title_bar.setStyleSheet("background-color: transparent; border: none;")
         main_layout.addWidget(self.title_bar)
         

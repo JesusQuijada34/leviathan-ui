@@ -10,7 +10,7 @@ class I18nManager:
         self.lang_data = {
             # Español por defecto
             "welcome_title": "Bienvenido al Instalador de Leviathan-UI",
-            "welcome_subtitle": "Este asistente instalará Leviathan-UI v1.0.4 en tu sistema.",
+            "welcome_subtitle": "Este asistente instalará Leviathan-UI v1.0.5 en tu sistema.",
             "welcome_desc": "Leviathan-UI es un framework premium de PyQt6 para crear aplicaciones modernas con estilo Windows 11.",
             "options_title": "Opciones de Instalación",
             "options_subtitle": "Personaliza la instalación según tus necesidades:",
@@ -30,7 +30,7 @@ class I18nManager:
             "install_package": "Instalando paquete...",
             "install_finish": "Finalizando...",
             "finish_title": "Instalación Completada",
-            "finish_subtitle": "Leviathan-UI v1.0.4 se ha instalado correctamente.",
+            "finish_subtitle": "Leviathan-UI v1.0.5 se ha instalado correctamente.",,
             "finish_desc": "Puedes comenzar a usar el framework inmediatamente.",
             "btn_next": "Siguiente",
             "btn_back": "Atrás",

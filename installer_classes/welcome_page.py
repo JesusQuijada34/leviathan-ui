@@ -78,7 +78,7 @@ class WelcomePage(QWidget):
         content_layout.addWidget(desc)
         
         # Info de versión
-        version_info = QLabel("Versión: 1.0.4 | Python 3.8+ | PyQt6 6.5+")
+        version_info = QLabel("Versión: 1.0.5 | Python 3.8+ | PyQt6 6.5+")
         version_info.setFont(QFont("Segoe UI", 10))
         version_info.setStyleSheet("color: #666666; background: transparent;")
         content_layout.addWidget(version_info)
