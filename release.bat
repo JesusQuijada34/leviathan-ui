@@ -45,7 +45,7 @@ if errorlevel 1 (
 )
 
 echo [5/6] Creando release en GitHub...
-gh release create v1.0.4 --title "Leviathan-UI v1.0.4 - Instalador Profesional" --notes-file CHANGELOG.md dist/leviathan_ui-1.0.4-py3-none-any.whl
+gh release create v1.0.4 --title "Leviathan-UI v1.0.4" --notes-file release.md dist/leviathan_ui-1.0.4-py3-none-any.whl
 if errorlevel 1 (
     echo ERROR: Fallo al crear release
     echo Intenta crear el release manualmente desde: https://github.com/JesusQuijada34/leviathan-ui/releases
