@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import (
     QPushButton, QStackedWidget, QMessageBox
 )
 from PyQt6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QPoint
-from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QFont, QGuiApplication
 
 from leviathan_ui.wipeWindow import WipeWindow
 from leviathan_ui.title_bar import CustomTitleBar
@@ -40,7 +40,18 @@ class LeviathanSetup(QWidget):
             sys.exit(1)
         
         self.setWindowTitle("Leviathan-UI Setup")
-        self.resize(800, 520)
+        
+        # Calcular tamaño basado en resolución de pantalla -50px=x, -30px=y
+        screen = QGuiApplication.primaryScreen()
+        screen_geometry = screen.geometry()
+        screen_width = screen_geometry.width()
+        screen_height = screen_geometry.height()
+        
+        # Aplicar offset y asegurar tamaño mínimo razonable
+        window_width = max(screen_width - 50, 800)
+        window_height = max(screen_height - 30, 520)
+        
+        self.resize(window_width, window_height)
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         
