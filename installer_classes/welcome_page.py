@@ -24,13 +24,16 @@ class WelcomePage(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
         
-        # Banner vertical izquierdo (splash_setup.png)
+        # Banner vertical izquierdo (splash_setup.png) - recortado y centrado
         self.banner = QLabel()
         self.banner.setFixedWidth(164)
-        self.banner.setScaledContents(True)
+        self.banner.setFixedHeight(520)  # Altura fija para match con ventana
+        self.banner.setAlignment(Qt.AlignmentFlag.AlignCenter)
         banner_pixmap = QPixmap("assets/splash_setup.png")
         if not banner_pixmap.isNull():
-            self.banner.setPixmap(banner_pixmap)
+            # Escalar manteniendo aspect ratio, luego centrar
+            scaled = banner_pixmap.scaled(164, 520, Qt.AspectRatioMode.KeepAspectRatioByExpanding, Qt.TransformationMode.SmoothTransformation)
+            self.banner.setPixmap(scaled)
             self.banner.setStyleSheet("background: transparent;")
         else:
             # Fallback: gradiente
@@ -75,7 +78,7 @@ class WelcomePage(QWidget):
         content_layout.addWidget(desc)
         
         # Info de versión
-        version_info = QLabel("Versión: 1.0.5 | Python 3.8+ | PyQt6 6.5+")
+        version_info = QLabel("Versión: 1.0.4 | Python 3.8+ | PyQt6 6.5+")
         version_info.setFont(QFont("Segoe UI", 10))
         version_info.setStyleSheet("color: #666666; background: transparent;")
         content_layout.addWidget(version_info)

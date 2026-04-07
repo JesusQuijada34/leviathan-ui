@@ -44,7 +44,7 @@ La documentación principal está en `docs/`:
 
 ### Error: `AttributeError: module 'locale' has no attribute 'getdefaultlocale'`
 
-**Solución**: Actualiza a Leviathan-UI v1.0.5+ que usa `locale.getlocale()` compatible con Python 3.11+.
+**Solución**: Actualiza a Leviathan-UI v1.0.4+ que usa `locale.getlocale()` compatible con Python 3.11+.
 
 ## ¿Qué versiones soporta este repositorio?
 Leviathan UI está diseñado para Python 3.8+ y usa `PyQt6>=6.5.0`.

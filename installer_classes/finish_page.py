@@ -59,7 +59,7 @@ class FinishPage(QWidget):
         info_layout = QVBoxLayout(info_frame)
         
         info_text = QLabel(
-            "📦 Leviathan-UI v1.0.5\n"
+            "📦 Leviathan-UI v1.0.4\n"
             "🐍 Python Package\n"
             "✅ Instalación verificada"
         )

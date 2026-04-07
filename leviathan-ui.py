@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Leviathan-UI Professional Setup v1.0.5
+Leviathan-UI Professional Setup v1.0.4
 Instalador pulido estilo NSIS con banners, opciones avanzadas, 
 y manejo robusto de instalación remota/local.
 
@@ -32,7 +32,7 @@ def main():
     
     # Verificar argumentos
     if len(sys.argv) > 1 and sys.argv[1] == "--version":
-        print("Leviathan-UI Setup v1.0.5")
+        print("Leviathan-UI Setup v1.0.4")
         sys.exit(0)
     
     window = LeviathanSetup()

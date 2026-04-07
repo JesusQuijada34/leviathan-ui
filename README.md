@@ -1,8 +1,8 @@
-# 🌊 Leviathan-UI: Framework Premium para PyQt6 (v1.0.5)
+# 🌊 Leviathan-UI: Framework Premium para PyQt6 (v1.0.4)
 
 **Leviathan-UI** es un framework profesional para crear aplicaciones de escritorio con el aspecto moderno de **Windows 11** usando Python y PyQt6.
 
-> **Lanzamiento 1.0.5** — Correcciones de compatibilidad PyQt6, scripts de demo funcionales, y mejoras visuales en controles.
+> **Lanzamiento 1.0.4** — Correcciones de compatibilidad PyQt6, scripts de demo funcionales, y mejoras visuales en controles.
 
 ## 📚 Documentación
 
@@ -23,7 +23,7 @@ Para publicar en PyPI necesitas un **token de acceso** de PyPI (no tu contraseñ
 3. Asegurar que el paquete es compatible instalando la rueda:
 
 ```bash
-python -m pip install dist/leviathan_ui-1.0.5-py3-none-any.whl
+python -m pip install dist/leviathan_ui-1.0.4-py3-none-any.whl
 ```
 
 4. Subir con twine:
@@ -37,7 +37,7 @@ python -m twine upload dist/*
 
 ---
 
-## 🚀 ¿Qué hay de nuevo? (v1.0.5)
+## 🚀 ¿Qué hay de nuevo? (v1.0.4)
 
 ### 🐛 Correcciones
 - **Compatibilidad PyQt6 completa**: Todos los scripts actualizados a sintaxis moderna (`Qt.AlignmentFlag`, `app.exec()`)
