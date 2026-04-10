@@ -1,4 +1,5 @@
 import sys
+import os
 from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel
 from PyQt6.QtCore import Qt
 from leviathan_ui import WipeWindow, CustomTitleBar, LeviathanDialog, InmojiTrx
@@ -79,7 +80,10 @@ if __name__ == "__main__":
     
     # Sincronizamos el icono con el ID de la app para la barra de tareas
     icon_path = os.path.join("app", "lvthnUI.dialogBox-icon.ico")
-    icon = InmojiTrx(icon_path).apply(app)
+    if os.path.exists(icon_path):
+        icon = InmojiTrx(icon_path).apply(app)
+    else:
+        icon = InmojiTrx("🐉").apply(app)
     
     ventana = MiVentana()
     # Aplicamos el icono también a la ventana (vital para frameless)

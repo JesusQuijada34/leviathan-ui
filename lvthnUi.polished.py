@@ -65,7 +65,10 @@ if __name__ == "__main__":
     
     # 3. InmojiTrx: Icono Premium
     icon_path = os.path.join("app", "lvthnUi.polished-icon.ico")
-    InmojiTrx(icon_path).apply(app)
+    if os.path.exists(icon_path):
+        InmojiTrx(icon_path).apply(app)
+    else:
+        InmojiTrx("🐉").apply(app)
     
     # 4. Definimos el Splash de Entrada (Modo Adaptive: no tapa el taskbar)
     # Soporta frases personalizadas de inicio

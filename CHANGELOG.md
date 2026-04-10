@@ -1,6 +1,27 @@
-# 📝 Historial de Cambios - Leviathan-UI
+# 📝 Changelog - Leviathan-UI
 
-## [1.0.4] - 2026-04-07: Instalador Profesional, PyQt6 y Documentación
+## [1.0.5] - 2026-04-09: Setup Refinement & UI Polish
+
+### 🎨 Instalador Profesional - Mejoras Visuales
+*   **Splash Screen Integrado**: Ahora el splash es parte de la ventana principal (modo APPX), mostrando el logo y título mientras carga.
+*   **Indicador de Página**: 4 dots visuales que muestran el progreso del setup (● ● ● ●).
+*   **Navegación Mejorada**: Botones "Atrás", "Siguiente" y "Cancelar" con estilo consistente.
+*   **Transiciones Automáticas**: Al completar la instalación, avanza automáticamente a la página final.
+
+### 🐛 Correcciones Críticas
+*   **Navegación Entre Páginas**: Solucionado problema donde el botón "Siguiente" no cambiaba de página.
+*   **Bordes Azules Eliminados**: Todos los widgets ahora usan fondo oscuro sólido (#121822) en lugar de transparencia que mostraba el azul de Windows.
+*   **Banner sin Distorsión**: El banner superior de instalación mantiene su aspect ratio correctamente.
+*   **PyQt6 API**: Corrección de `QEasingCurve.OutQuad` → `QEasingCurve.Type.OutQuad`.
+
+### 📐 Layout Compacto
+*   Ventana reducida a 720×480px (más compacta y profesional).
+*   Espaciado reducido entre controles para eliminar espacio desperdiciado.
+*   Tamaños de fuente optimizados para mejor legibilidad.
+
+---
+
+## [1.0.4] - 2026-04-07: Professional Installer, PyQt6 & Documentation
 
 ### 🚀 Nuevo Instalador Leviathan-UI Setup
 *   **UI completamente rediseñada**: Instalador profesional estilo NSIS con banners y transiciones pulidas.

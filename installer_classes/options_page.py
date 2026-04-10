@@ -21,23 +21,22 @@ class OptionsPage(QWidget):
         self.setup_ui()
     
     def setup_ui(self):
+        self.setStyleSheet("background-color: #121822; border: none;")
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(50, 40, 50, 40)
-        layout.setSpacing(25)
-        
+        layout.setContentsMargins(25, 20, 25, 20)
+        layout.setSpacing(12)
+
         # Título
         title = QLabel(i18n.get("options_title"))
-        title.setFont(QFont("Segoe UI", 22, QFont.Weight.Bold))
+        title.setFont(QFont("Segoe UI", 18, QFont.Weight.Bold))
         title.setStyleSheet("color: white; background: transparent;")
         layout.addWidget(title)
-        
+
         subtitle = QLabel(i18n.get("options_subtitle"))
-        subtitle.setFont(QFont("Segoe UI", 11))
+        subtitle.setFont(QFont("Segoe UI", 10))
         subtitle.setStyleSheet("color: #aaaaaa; background: transparent;")
         layout.addWidget(subtitle)
-        
-        layout.addSpacing(20)
-        
+
         # Frame de opciones
         options_frame = QFrame()
         options_frame.setStyleSheet("""
@@ -48,8 +47,8 @@ class OptionsPage(QWidget):
             }
         """)
         options_layout = QVBoxLayout(options_frame)
-        options_layout.setContentsMargins(25, 25, 25, 25)
-        options_layout.setSpacing(20)
+        options_layout.setContentsMargins(15, 15, 15, 15)
+        options_layout.setSpacing(12)
         
         # Modo de instalación
         mode_label = QLabel(i18n.get("opt_install_mode"))
@@ -86,14 +85,11 @@ class OptionsPage(QWidget):
         
         QTimer.singleShot(100, self.check_connection)
         
-        options_layout.addSpacing(15)
-        
-        # Separador
+        # Separador compacto
         line = QFrame()
         line.setFrameShape(QFrame.Shape.HLine)
         line.setStyleSheet("background: rgba(255,255,255,0.1); max-height: 1px;")
         options_layout.addWidget(line)
-        options_layout.addSpacing(10)
         
         # Accesos directos
         shortcuts_label = QLabel(i18n.get("opt_shortcuts"))
@@ -120,16 +116,13 @@ class OptionsPage(QWidget):
             QCheckBox::indicator:checked { background: #4CAF50; border-color: #4CAF50; }
         """)
         options_layout.addWidget(self.chk_startmenu)
-        
-        options_layout.addSpacing(15)
-        
-        # Separador
+
+        # Separador compacto
         line2 = QFrame()
         line2.setFrameShape(QFrame.Shape.HLine)
         line2.setStyleSheet("background: rgba(255,255,255,0.1); max-height: 1px;")
         options_layout.addWidget(line2)
-        options_layout.addSpacing(10)
-        
+
         # Opciones avanzadas
         adv_label = QLabel(i18n.get("opt_advanced"))
         adv_label.setFont(QFont("Segoe UI", 12, QFont.Weight.Bold))
@@ -154,9 +147,8 @@ class OptionsPage(QWidget):
             QCheckBox::indicator:checked { background: #ff9800; border-color: #ff9800; }
         """)
         options_layout.addWidget(self.chk_upgrade)
-        
+
         layout.addWidget(options_frame)
-        layout.addStretch()
     
     def on_mode_changed(self):
         """Gestiona el cambio de modo de instalación"""

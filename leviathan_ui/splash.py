@@ -16,21 +16,27 @@ class InmersiveSplash(QWidget):
     - full: Ocupa absolutamente toda la pantalla (Kiosk).
     - appx: Integrado en ventana principal (estilo APPX/UWP).
     """
-    def __init__(self, title="Sincronizando...", logo="🐉", color="auto", is_exit=False, splash_type="LV", parent=None, show_progress=True):
+    def __init__(self, title="Sincronizando...", subtitle=None, logo="🐉", icon_text=None,
+                 color="auto", bg_color=None, accent_color=None, is_exit=False, 
+                 splash_type="LV", parent=None, show_progress=True):
         super().__init__(parent=parent)
         self._target_window = parent
         self.is_exit = is_exit
         self._title = title
+        self._subtitle = subtitle
         self._logo = logo
+        self._icon_text = icon_text
         self._color_cfg = color
+        self._bg_color = bg_color
+        self._accent_color = accent_color
         self._type = splash_type.upper()
         self._mode = "adaptive"
         self._phrases = []
         self._callback = None
         self._marquee = False
-        self._final_color = "#0078d4"
-        self._show_progress = show_progress  # Controlar visibilidad de barra de progreso
-        self._embedded_mode = False  # Modo APPX integrado
+        self._final_color = accent_color or "#0078d4"
+        self._show_progress = show_progress
+        self._embedded_mode = False
         
         # Flags de ventana
         if self._target_window:
@@ -67,11 +73,14 @@ class InmersiveSplash(QWidget):
         else:
             screen = QApplication.primaryScreen()
             if screen is None:
-                geom = QRect(0, 0, 1024, 768)
-            elif self._mode == "adaptive":
-                geom = screen.availableGeometry() # Respeta Taskbar
+                geom = QRect(0, 0, 480, 320)
             else:
-                geom = screen.geometry() # Full Kiosk
+                # Splash centrado de tamaño fijo, no pantalla completa
+                screen_geom = screen.availableGeometry()
+                splash_w, splash_h = 480, 320
+                x = screen_geom.x() + (screen_geom.width() - splash_w) // 2
+                y = screen_geom.y() + (screen_geom.height() - splash_h) // 2
+                geom = QRect(x, y, splash_w, splash_h)
             self.setGeometry(geom)
         
         # 2. Color de Fondo
@@ -100,14 +109,18 @@ class InmersiveSplash(QWidget):
         if self._type == "UWP":
             self._logo = "app/app-icon.ico" if os.path.exists("app/app-icon.ico") else self._logo
             self._marquee = True
-            # Solo usar negro si no se especificó 'auto'
-            if self._color_cfg != "auto":
-                self._final_color = "#000000"
+            # Usar color configurado si existe, si no usar el del sistema
+            if self._color_cfg == "auto":
+                self._final_color = get_accent_color()
+            else:
+                self._final_color = self._color_cfg
         elif self._type == "BUNDLED":
             self._logo = "assets/splash.png" if os.path.exists("assets/splash.png") else self._logo
             self._marquee = True
-            if self._color_cfg != "auto":
-                self._final_color = "#000000"
+            if self._color_cfg == "auto":
+                self._final_color = get_accent_color()
+            else:
+                self._final_color = self._color_cfg
 
         self.logo_lbl = QLabel()
         if is_icon_file(self._logo):
@@ -139,9 +152,16 @@ class InmersiveSplash(QWidget):
         content_layout.addWidget(self.pbar, alignment=Qt.AlignmentFlag.AlignCenter)
         
         if self._type == "LV":
+            # Mostrar título
             self.status_lbl = QLabel(self._title)
-            self.status_lbl.setStyleSheet("color: white; font-family: 'Segoe UI'; font-size: 18px; font-weight: 600; background: transparent;")
+            self.status_lbl.setStyleSheet("color: white; font-family: 'Segoe UI'; font-size: 22px; font-weight: 600; background: transparent;")
             content_layout.addWidget(self.status_lbl, alignment=Qt.AlignmentFlag.AlignCenter)
+            
+            # Mostrar subtitle si existe
+            if self._subtitle:
+                self.subtitle_lbl = QLabel(self._subtitle)
+                self.subtitle_lbl.setStyleSheet("color: rgba(255,255,255,0.7); font-family: 'Segoe UI'; font-size: 14px; background: transparent;")
+                content_layout.addWidget(self.subtitle_lbl, alignment=Qt.AlignmentFlag.AlignCenter)
 
         # 4. Animación de Entrada
         self.opacity_effect = QGraphicsOpacityEffect(self)
@@ -216,23 +236,24 @@ class InmersiveSplash(QWidget):
         self._show_progress = show
         return self
 
-    def attach_to_main_window(self, main_window, content_layout):
+    def attach_to_main_window(self, main_window, content_container):
         """
-        Modo APPX: Muestra el splash como overlay en la ventana principal.
-        El splash cubre todo el contenido y luego hace fade out para revelar la interfaz.
+        Modo APPX: Muestra el splash como overlay en el contenedor de contenido.
+        El splash cubre solo el área de contenido dejando visible titlebar y buttonbar.
         """
         self._embedded_mode = True
         self._target_window = main_window
-        self._content_layout = content_layout
-        
-        # Crear el splash como widget overlay
-        self.setParent(main_window.centralWidget())
-        self.setGeometry(main_window.centralWidget().rect())
-        
-        # Color de fondo
-        self._final_color = get_accent_color() if self._color_cfg == "auto" else self._color_cfg
-        if self._type == "APPX":
-            self._final_color = "#121822"  # Color oscuro consistente
+
+        # Crear el splash como widget overlay sobre el content_container
+        self.setParent(content_container)
+        self.setGeometry(content_container.rect())
+        self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)  # No bloquear clicks
+
+        # Color de fondo - usar el configurado o el del sistema
+        if self._color_cfg == "auto":
+            self._final_color = get_accent_color()
+        else:
+            self._final_color = self._color_cfg
         
         # Layout vertical para el contenido del splash
         self.main_layout = QVBoxLayout(self)
@@ -260,12 +281,17 @@ class InmersiveSplash(QWidget):
         self.logo_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.main_layout.addWidget(self.logo_lbl)
         
-        # Título (solo si es tipo APPX o LV)
-        if self._type in ["APPX", "LV"]:
-            self.status_lbl = QLabel(self._title)
-            self.status_lbl.setStyleSheet("color: white; font-family: 'Segoe UI'; font-size: 16px; font-weight: 500; background: transparent;")
-            self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            self.main_layout.addWidget(self.status_lbl)
+        # Título y subtítulo (siempre mostrar en setup)
+        self.status_lbl = QLabel(self._title)
+        self.status_lbl.setStyleSheet("color: white; font-family: 'Segoe UI'; font-size: 18px; font-weight: 600; background: transparent;")
+        self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.main_layout.addWidget(self.status_lbl)
+
+        if self._subtitle:
+            self.subtitle_lbl = QLabel(self._subtitle)
+            self.subtitle_lbl.setStyleSheet("color: rgba(255,255,255,0.7); font-family: 'Segoe UI'; font-size: 13px; background: transparent;")
+            self.subtitle_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            self.main_layout.addWidget(self.subtitle_lbl)
         
         # Barra de progreso (opcional)
         if self._show_progress:
@@ -313,11 +339,18 @@ class InmersiveSplash(QWidget):
     def _remove_splash(self):
         """Elimina el splash del layout y libera recursos."""
         self.hide()
+        self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
         self.setParent(None)
         self.deleteLater()
         if self._callback:
             self._callback()
         
+    def resizeEvent(self, event):
+        """Ajustar tamaño cuando el contenedor cambia de tamaño"""
+        super().resizeEvent(event)
+        if self._embedded_mode and self.parent():
+            self.setGeometry(self.parent().rect())
+
     def paintEvent(self, event):
         p = QPainter(self)
         p.setRenderHint(QPainter.RenderHint.Antialiasing)

@@ -3,6 +3,7 @@
 """
 leviathan-ui - CLI principal para SetupDialogs v1.0.5
 Comandos: configure, activepath, showStatus, start, precompile, compile, packageStart
+Diseño visual creativo con colores ANSI y ASCII art
 """
 
 import os
@@ -12,6 +13,7 @@ import shutil
 import subprocess
 import tempfile
 import argparse
+import time
 from pathlib import Path
 from typing import List, Dict, Optional, Callable
 
@@ -20,6 +22,177 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from leviathan_ui.Script import LeviScript
 from leviathan_ui.progress_bar import LeviathanProgressBar
+
+
+# ============================================================
+# COLORES Y ESTILOS ANSI
+# ============================================================
+class C:
+    """Colores ANSI para terminal creativo"""
+    RESET = '\033[0m'
+    BOLD = '\033[1m'
+    DIM = '\033[2m'
+    ITALIC = '\033[3m'
+    UNDERLINE = '\033[4m'
+    
+    # Foreground
+    RED = '\033[31m'
+    GREEN = '\033[32m'
+    YELLOW = '\033[33m'
+    BLUE = '\033[34m'
+    MAGENTA = '\033[35m'
+    CYAN = '\033[36m'
+    WHITE = '\033[37m'
+    
+    # Bright
+    B_RED = '\033[91m'
+    B_GREEN = '\033[92m'
+    B_YELLOW = '\033[93m'
+    B_BLUE = '\033[94m'
+    B_MAGENTA = '\033[95m'
+    B_CYAN = '\033[96m'
+    B_WHITE = '\033[97m'
+    
+    # Background
+    BG_RED = '\033[41m'
+    BG_GREEN = '\033[42m'
+    BG_BLUE = '\033[44m'
+    BG_MAGENTA = '\033[45m'
+    BG_CYAN = '\033[46m'
+
+
+# ============================================================
+# ASCII ART Y BANNERS
+# ============================================================
+class Art:
+    """Arte ASCII para CLI creativo"""
+    
+    LOGO = f"""
+{C.B_CYAN}    ██╗     ███████╗██╗   ██╗██╗ █████╗ ████████╗██╗  ██╗ █████╗ ███╗   ██╗
+    ██║     ██╔════╝██║   ██║██║██╔══██╗╚══██╔══╝██║  ██║██╔══██╗████╗  ██║
+    ██║     █████╗  ██║   ██║██║███████║   ██║   ███████║███████║██╔██╗ ██║
+    ██║     ██╔══╝  ╚██╗ ██╔╝██║██╔══██║   ██║   ██╔══██║██╔══██║██║╚██╗██║
+    ███████╗███████╗ ╚████╔╝ ██║██║  ██║   ██║   ██║  ██║██║  ██║██║ ╚████║
+    ╚══════╝╚══════╝  ╚═══╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝{C.RESET}
+{C.B_BLUE}                           ██╗   ██╗██╗{C.RESET}
+{C.B_BLUE}                           ██║   ██║██║{C.RESET}
+{C.B_BLUE}                           ██║   ██║██║{C.RESET}
+{C.B_BLUE}                           ██║   ██║██║{C.RESET}
+{C.B_BLUE}                           ╚██████╔╝██║{C.RESET}
+{C.B_BLUE}                            ╚═════╝ ╚═╝{C.RESET}
+    """
+    
+    DRAGON = f"""
+{C.B_CYAN}      /\\      /\\
+     /  \\____/  \\
+    /    {C.B_RED}()  (){C.B_CYAN}    \\
+   |      {C.B_YELLOW}\\__/{C.B_CYAN}      |
+    \\   {C.B_GREEN}______{C.B_CYAN}    /
+     |  {C.B_GREEN}/      \\{C.B_CYAN}  |
+     /  {C.B_GREEN}\\______/{C.B_CYAN}  \\
+    /____________\\{C.RESET}
+    """
+    
+    SETUP_DIALOGS = f"""
+{C.B_MAGENTA}╔═══════════════════════════════════════════════════════════════════╗
+║{C.B_WHITE}           🔥 SETUP DIALOGS - Motor de Instaladores 🔥{C.B_MAGENTA}            ║
+║{C.DIM}           "El arte de instalar con elegancia y poder"{C.B_MAGENTA}           ║
+╚═══════════════════════════════════════════════════════════════════╝{C.RESET}
+    """
+    
+    DIVIDER = f"{C.DIM}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{C.RESET}"
+    THIN_DIV = f"{C.DIM}─────────────────────────────────────────────────────────────────{C.RESET}"
+    
+    # Iconos
+    OK = f"{C.B_GREEN}✓{C.RESET}"
+    ERR = f"{C.B_RED}✗{C.RESET}"
+    WARN = f"{C.B_YELLOW}⚠{C.RESET}"
+    INFO = f"{C.B_BLUE}ℹ{C.RESET}"
+    BULLET = f"{C.B_CYAN}●{C.RESET}"
+    ARROW = f"{C.B_CYAN}➜{C.RESET}"
+    FIRE = f"{C.B_RED}🔥{C.RESET}"
+    GEAR = f"{C.B_YELLOW}⚙{C.RESET}"
+    PACKAGE = f"{C.B_MAGENTA}📦{C.RESET}"
+    ROCKET = f"{C.B_GREEN}🚀{C.RESET}"
+    SPARKLES = f"{C.B_YELLOW}✨{C.RESET}"
+
+
+# ============================================================
+# FUNCIONES DE DISEÑO
+# ============================================================
+def print_header():
+    """Imprimir cabecera visual"""
+    print(Art.LOGO)
+    print(Art.SETUP_DIALOGS)
+    print()
+
+
+def print_section(title: str, icon: str = Art.GEAR):
+    """Imprimir sección decorada"""
+    print()
+    print(f"{C.B_MAGENTA}╔═{C.RESET} {icon} {C.BOLD}{C.B_WHITE}{title}{C.RESET}")
+    print(Art.THIN_DIV)
+
+
+def print_box(content: str, style: str = "single"):
+    """Imprimir caja decorativa"""
+    lines = content.split('\n')
+    max_len = max(len(line) for line in lines)
+    
+    if style == "double":
+        print(f"{C.B_CYAN}╔{'═' * (max_len + 2)}╗{C.RESET}")
+        for line in lines:
+            print(f"{C.B_CYAN}║{C.RESET} {line.ljust(max_len)} {C.B_CYAN}║{C.RESET}")
+        print(f"{C.B_CYAN}╚{'═' * (max_len + 2)}╝{C.RESET}")
+    else:
+        print(f"{C.B_BLUE}┌{'─' * (max_len + 2)}┐{C.RESET}")
+        for line in lines:
+            print(f"{C.B_BLUE}│{C.RESET} {line.ljust(max_len)} {C.B_BLUE}│{C.RESET}")
+        print(f"{C.B_BLUE}└{'─' * (max_len + 2)}┘{C.RESET}")
+
+
+def print_success(msg: str):
+    """Mensaje de éxito"""
+    print(f"{Art.OK} {C.B_GREEN}{msg}{C.RESET}")
+
+
+def print_error(msg: str):
+    """Mensaje de error"""
+    print(f"{Art.ERR} {C.B_RED}{msg}{C.RESET}")
+
+
+def print_warning(msg: str):
+    """Mensaje de advertencia"""
+    print(f"{Art.WARN} {C.B_YELLOW}{msg}{C.RESET}")
+
+
+def print_info(msg: str):
+    """Mensaje informativo"""
+    print(f"{Art.INFO} {C.B_BLUE}{msg}{C.RESET}")
+
+
+def print_step(num: int, msg: str):
+    """Paso numerado"""
+    print(f"{C.B_CYAN}  [{num}]{C.RESET} {msg}")
+
+
+def spinner_animation(text: str, duration: float = 1.0):
+    """Animación de spinner"""
+    spinners = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
+    start = time.time()
+    i = 0
+    while time.time() - start < duration:
+        print(f"\r{C.B_CYAN}{spinners[i % len(spinners)]}{C.RESET} {text}...", end='', flush=True)
+        time.sleep(0.1)
+        i += 1
+    print(f"\r{Art.OK} {text} {C.B_GREEN}completado{C.RESET}      ")
+
+
+def progress_bar(percent: int, width: int = 40) -> str:
+    """Barra de progreso visual"""
+    filled = int(width * percent / 100)
+    bar = f"{C.B_GREEN}{'█' * filled}{C.DIM}{'░' * (width - filled)}{C.RESET}"
+    return f"[{bar}] {C.B_CYAN}{percent}%{C.RESET}"
 
 
 try:
@@ -48,46 +221,110 @@ class LeviathanCLI:
         self._setup_subcommands()
         
     def _setup_subcommands(self):
-        subparsers = self.parser.add_subparsers(dest='command', help='Comandos disponibles')
+        subparsers = self.parser.add_subparsers(dest='command', help='Comandos tipo npm disponibles')
         
-        # configure
-        configure_parser = subparsers.add_parser('configure', help='Crear nuevo proyecto de instalador')
-        configure_parser.add_argument('name', type=str, help='Nombre del instalador')
-        configure_parser.add_argument('--requires', type=str, default='nativeGear',
+        # init = configure (tipo npm init)
+        init_parser = subparsers.add_parser('init', help='Inicializar nuevo proyecto (npm-style)')
+        init_parser.add_argument('name', type=str, nargs='?', default='my-app',
+                               help='Nombre del proyecto')
+        init_parser.add_argument('--template', type=str, default='nativeGear',
+                               choices=['packagemaker', 'nativeGear'],
+                               help='Template/esqueleto a usar')
+        init_parser.add_argument('--gpumode', type=str, default='inactive',
+                               choices=['active', 'inactive'],
+                               help='Modo GPU para depuración visual')
+        
+        # Alias: configure = init
+        configure_parser = subparsers.add_parser('configure', help='[Alias de init] Crear nuevo proyecto')
+        configure_parser.add_argument('name', type=str, nargs='?', default='my-app',
+                                    help='Nombre del proyecto')
+        configure_parser.add_argument('--requires', '--template', type=str, default='nativeGear',
                                     choices=['packagemaker', 'nativeGear'],
-                                    help='Tipo de esqueleto a usar')
+                                    dest='template',
+                                    help='Template/esqueleto a usar')
         configure_parser.add_argument('--gpumode', type=str, default='inactive',
                                     choices=['active', 'inactive'],
-                                    help='Modo de depuración gráfica GPU')
+                                    help='Modo GPU para depuración visual')
         
-        # activepath
-        subparsers.add_parser('activepath', help='Registrar leviathan-ui al PATH de Windows')
+        # install = activepath (tipo npm install -g)
+        install_parser = subparsers.add_parser('install', help='Instalar leviathan-ui globalmente (npm-style)')
+        install_parser.add_argument('-g', '--global', action='store_true', default=True,
+                                   help='Instalar globalmente (por defecto)')
         
-        # showStatus
-        subparsers.add_parser('showStatus', help='Mostrar estado del proyecto actual')
+        # Alias: activepath = install
+        subparsers.add_parser('activepath', help='[Alias de install] Registrar en PATH')
         
-        # start
-        start_parser = subparsers.add_parser('start', help='Testear sintaxis del proyecto')
+        # status = showStatus (tipo npm list)
+        status_parser = subparsers.add_parser('status', help='Mostrar estado del proyecto (npm-style)')
+        
+        # Alias: showStatus = status
+        subparsers.add_parser('showStatus', help='[Alias de status] Mostrar estado del proyecto')
+        
+        # run / test = start (tipo npm run / npm test)
+        run_parser = subparsers.add_parser('run', help='Ejecutar/testear proyecto (npm-style)')
+        run_parser.add_argument('script', type=str, nargs='?', default='test',
+                              choices=['test', 'start', 'lint', 'build'],
+                              help='Script a ejecutar')
+        run_parser.add_argument('--file', type=str, default='setup.ls',
+                               help='Archivo LeviScript a testear')
+        
+        # Alias: start = run test
+        start_parser = subparsers.add_parser('start', help='[Alias de run test] Testear sintaxis')
         start_parser.add_argument('--file', type=str, default='setup.ls',
                                  help='Archivo LeviScript a testear')
         
-        # precompile
+        # precompile (mantener)
         precompile_parser = subparsers.add_parser('precompile', help='Precompilar .ls a .lsx')
-        precompile_parser.add_argument('file', type=str, help='Archivo .ls a precompilar')
+        precompile_parser.add_argument('file', type=str, nargs='?', default='setup.ls',
+                                      help='Archivo .ls a precompilar')
         precompile_parser.add_argument('-o', '--output', type=str, help='Archivo .lsx de salida')
         
-        # compile
-        compile_parser = subparsers.add_parser('compile', help='Compilar .lsx a ejecutable .exe')
-        compile_parser.add_argument('file', type=str, help='Archivo .lsx a compilar')
+        # build = compile (tipo npm run build)
+        build_parser = subparsers.add_parser('build', help='Compilar proyecto a .exe (npm-style)')
+        build_parser.add_argument('file', type=str, nargs='?', default='setup.lsx',
+                                 help='Archivo .lsx a compilar')
+        build_parser.add_argument('--icon', type=str, help='Icono para el ejecutable')
+        build_parser.add_argument('--onefile', action='store_true', help='Crear ejecutable único')
+        build_parser.add_argument('--windowed', action='store_true', default=True,
+                               help='Modo ventana (sin consola)')
+        
+        # Alias: compile = build
+        compile_parser = subparsers.add_parser('compile', help='[Alias de build] Compilar a .exe')
+        compile_parser.add_argument('file', type=str, nargs='?', default='setup.lsx',
+                                 help='Archivo .lsx a compilar')
         compile_parser.add_argument('--icon', type=str, help='Icono para el ejecutable')
         compile_parser.add_argument('--onefile', action='store_true', help='Crear ejecutable único')
         compile_parser.add_argument('--windowed', action='store_true', default=True,
-                                     help='Modo ventana (sin consola)')
+                                   help='Modo ventana (sin consola)')
         
-        # packageStart
-        package_parser = subparsers.add_parser('packageStart', help='Crear paquete final blindado')
-        package_parser.add_argument('file', type=str, help='Proyecto a empaquetar')
+        # pack = packageStart (tipo npm pack)
+        pack_parser = subparsers.add_parser('pack', help='Empaquetar proyecto (npm-style)')
+        pack_parser.add_argument('file', type=str, nargs='?', default='.',
+                                help='Directorio a empaquetar')
+        pack_parser.add_argument('--obfuscate', action='store_true', help='Ofuscar código')
+        
+        # Alias: packageStart = pack
+        package_parser = subparsers.add_parser('packageStart', help='[Alias de pack] Empaquetar blindado')
+        package_parser.add_argument('file', type=str, nargs='?', default='.',
+                                   help='Proyecto a empaquetar')
         package_parser.add_argument('--obfuscate', action='store_true', help='Ofuscar código')
+        
+        # help = guía paso a paso
+        help_parser = subparsers.add_parser('help', help='Guía interactiva paso a paso')
+        help_parser.add_argument('--topic', type=str, default='all',
+                                choices=['all', 'init', 'build', 'pack', 'syntax'],
+                                help='Tema específico de ayuda')
+        
+        command_map = {
+            'configure': self.cmd_configure,
+            'activepath': self.cmd_activepath,
+            'showStatus': self.cmd_show_status,
+            'start': self.cmd_start,
+            'precompile': self.cmd_precompile,
+            'compile': self.cmd_compile,
+            'packageStart': self.cmd_package_start,
+            'help': self.cmd_help,
+        }
         
     def run(self, args=None):
         """Ejecutar comando"""
@@ -98,13 +335,21 @@ class LeviathanCLI:
             return 1
             
         command_map = {
-            'configure': self.cmd_configure,
-            'activepath': self.cmd_activepath,
-            'showStatus': self.cmd_show_status,
-            'start': self.cmd_start,
+            'init': self.cmd_init,
+            'install': self.cmd_install,
+            'status': self.cmd_status,
+            'run': self.cmd_run,
+            'build': self.cmd_build,
+            'pack': self.cmd_pack,
+            'help': self.cmd_help,
+            # Comandos legacy/alias
+            'configure': self.cmd_init,  # alias de init
+            'activepath': self.cmd_install,  # alias de install
+            'showStatus': self.cmd_status,  # alias de status
+            'start': self.cmd_start,  # alias de run test
             'precompile': self.cmd_precompile,
-            'compile': self.cmd_compile,
-            'packageStart': self.cmd_package_start,
+            'compile': self.cmd_build,  # alias de build
+            'packageStart': self.cmd_pack,  # alias de pack
         }
         
         return command_map[args.command](args)
@@ -152,10 +397,10 @@ class LeviathanCLI:
                 (project_dir / 'dist').mkdir()
                 
             elif i == 1:
-                self._generate_skeleton(project_dir, args.name, args.requires)
+                self._create_manifest(project_dir, args.name, args.template)
                 
             elif i == 2:
-                self._create_config(project_dir, args.name, args.requires)
+                self._generate_skeleton(project_dir, args.name, args.template)
                 
             elif i == 3:
                 # Verificar dependencias
@@ -167,111 +412,181 @@ class LeviathanCLI:
         print()
         print("Próximos pasos:")
         print(f"  cd {args.name}")
-        print("  leviathan-ui start        # Testear sintaxis")
-        print("  leviathan-ui precompile    # Precompilar a .lsx")
-        print("  leviathan-ui compile       # Compilar a .exe")
+        print("  leviathan-ui run test      # Testear sintaxis")
+        print("  leviathan-ui build         # Compilar a .exe")
+        print("  leviathan-ui pack          # Empaquetar proyecto")
         return 0
     
-    def _generate_skeleton(self, project_dir: Path, name: str, skeleton_type: str):
-        """Generar esqueleto base del proyecto"""
+    def _create_manifest(self, project_dir: Path, name: str, template: str):
+        """Crear leviathan.json tipo package.json"""
+        manifest = {
+            "name": name,
+            "version": "1.0.0",
+            "description": f"Instalador {name} generado con Leviathan-UI",
+            "author": "",
+            "license": "MIT",
+            "main": "src/index.ls",
+            "scripts": {
+                "test": "leviathan-ui run test",
+                "build": "leviathan-ui build",
+                "precompile": "leviathan-ui precompile",
+                "pack": "leviathan-ui pack"
+            },
+            "dependencies": {
+                "leviathan-ui": f">={self.VERSION}"
+            },
+            "template": template,
+            "config": {
+                "installDir": f"${{env.PROGRAMFILES}}/{name}",
+                "desktopShortcut": True,
+                "startMenuShortcut": True,
+                "gpuMode": "inactive"
+            },
+            "pages": [
+                "welcome",
+                "options", 
+                "install",
+                "finish"
+            ],
+            "assets": {
+                "banner": "assets/banner.png",
+                "icon": "assets/icon.ico",
+                "splash": "assets/splash.png"
+            }
+        }
         
-        # Crear archivo LeviScript principal
-        ls_content = f'''// {name}.ls - LeviScript SetupDialogs v{self.VERSION}
-// Generado por leviathan-ui configure
+        import json
+        (project_dir / 'leviathan.json').write_text(
+            json.dumps(manifest, indent=2, ensure_ascii=False),
+            encoding='utf-8'
+        )
+    
+    def _generate_skeleton(self, project_dir: Path, name: str, template: str):
+        """Generar esqueleto base del proyecto - formato YAML-like + JS"""
+        
+        # Crear src/index.ls - sintaxis tipo JS/YAML
+        ls_content = f'''# LeviScript v{self.VERSION} - {name}
+# Estructura tipo YAML Manifest + JS
 
-@setup {name} {{
-    meta {{
-        name: "{name}"
-        version: "1.0.0"
-        author: "Autor"
-        description: "Instalador profesional generado con Leviathan-UI"
+# ============ CONFIGURACIÓN (YAML-like) ============
+meta:
+  name: "{name}"
+  version: "1.0.0"
+  author: "Autor"
+  description: "Instalador profesional"
+  license: "MIT"
+
+requires:
+  - leviathan-ui >= {self.VERSION}
+
+# ============ VARIABLES (JS-style) ============
+const installDir = `${{env.PROGRAMFILES}}/{name}`;
+const createDesktopShortcut = true;
+const createStartMenuShortcut = true;
+const appExecutable = "{name}.exe";
+
+# ============ PÁGINAS (Array JS) ============
+pages: [
+  {{
+    type: "welcome",
+    title: `Bienvenido a ${{meta.name}}`,
+    subtitle: "Asistente de instalación",
+    banner: "assets/banner.png",
+    style: "modern"
+  }},
+  {{
+    type: "options",
+    title: "Opciones de Instalación",
+    installPath: installDir,
+    shortcuts: {{
+      desktop: createDesktopShortcut,
+      startmenu: createStartMenuShortcut
     }}
-    
-    requires ["leviathan-ui>={self.VERSION}"]
-    
-    // Variables de configuración
-    let installDir = "${{env.PROGRAMFILES}}/{name}"
-    let createDesktopShortcut = true
-    let createStartMenuShortcut = true
-    
-    // Páginas del instalador
-    pages [
-        Welcome {{
-            title: "Bienvenido a {name}"
-            subtitle: "Asistente de instalación"
-            banner: "assets/splash_setup.png"
-            style: "vertical"
-        }}
-        
-        Options {{
-            title: "Opciones de Instalación"
-            installPath: installDir
-            shortcuts: {{
-                desktop: createDesktopShortcut
-                startmenu: createStartMenuShortcut
-            }}
-        }}
-        
-        Install {{
-            title: "Instalando..."
-            worker: true
-            showProgress: true
-            showLog: true
-            animation: "smooth"
-        }}
-        
-        Finish {{
-            title: "Instalación Completada"
-            launchApp: false
-            showReadme: true
-        }}
-    ]
-    
-    // Hooks del ciclo de vida
-    beforeDisplay {{
-        log("Iniciando instalador de {name}...")
-        checkDependencies()
-    }}
-    
-    onInstall(progress) {{
-        step("Extrayendo archivos...", 20)
-        // extractFiles("data.zip", installDir)
-        
-        step("Configurando sistema...", 60)
-        // registerInRegistry(installDir)
-        
-        step("Creando accesos directos...", 90)
-        if (createDesktopShortcut) {{
-            createShortcut("Desktop", "${{installDir}}/app.exe")
-        }}
-        createShortcut("StartMenu", "${{installDir}}/app.exe")
-        
-        step("Finalizando...", 100)
-    }}
-    
-    afterInstall {{
-        log("Instalación completada exitosamente")
-        saveConfig()
-    }}
-    
-    onError(error) {{
-        log("ERROR: " + error.message)
-        showDialog("error", error.message)
-    }}
+  }},
+  {{
+    type: "install",
+    title: "Instalando...",
+    worker: true,
+    showProgress: true,
+    showLog: true,
+    animation: "smooth"
+  }},
+  {{
+    type: "finish",
+    title: "Instalación Completada",
+    launchApp: false,
+    showReadme: true
+  }}
+];
+
+# ============ HOOKS (Funciones JS) ============
+function beforeDisplay() {{
+  console.log(`Iniciando instalador de ${{meta.name}}...`);
+  checkDependencies();
 }}
+
+function onInstall(progress) {{
+  progress.step("Extrayendo archivos...", 20);
+  // extractFiles("data.zip", installDir);
+  
+  progress.step("Configurando sistema...", 60);
+  // registerInRegistry(installDir);
+  
+  progress.step("Creando accesos directos...", 90);
+  if (createDesktopShortcut) {{
+    createShortcut("Desktop", `${{installDir}}/${{appExecutable}}`);
+  }}
+  createShortcut("StartMenu", `${{installDir}}/${{appExecutable}}`);
+  
+  progress.step("Finalizando...", 100);
+}}
+
+function afterInstall() {{
+  console.log("Instalación completada exitosamente");
+  saveConfig();
+}}
+
+function onError(error) {{
+  console.error(`ERROR: ${{error.message}}`);
+  dialog.error(error.message);
+}}
+
+# Exportar configuración
+export default {{
+  meta,
+  pages,
+  beforeDisplay,
+  onInstall,
+  afterInstall,
+  onError
+}};
 '''
         
-        if skeleton_type == 'packagemaker':
-            ls_content += '''
-// Importaciones específicas de packagemaker
-import { Page, Component } from "packagemaker"
-'''
-        else:
-            ls_content += '''
-// Usando nativeGear - esqueleto nativo de Leviathan-UI
-'''
+        # Escribir archivo principal
+        (project_dir / 'src' / 'index.ls').write_text(ls_content, encoding='utf-8')
         
-        (project_dir / 'src' / f'{name}.ls').write_text(ls_content, encoding='utf-8')
+        # Crear package.json adicional para npm users
+        package_json = {
+            "name": name.lower().replace(" ", "-"),
+            "version": "1.0.0",
+            "description": f"Instalador {name}",
+            "private": True,
+            "scripts": {
+                "init": f"leviathan-ui init {name}",
+                "test": "leviathan-ui run test",
+                "build": "leviathan-ui build",
+                "precompile": "leviathan-ui precompile",
+                "pack": "leviathan-ui pack"
+            },
+            "devDependencies": {
+                "leviathan-ui": f"^{self.VERSION}"
+            }
+        }
+        
+        (project_dir / 'package.json').write_text(
+            json.dumps(package_json, indent=2, ensure_ascii=False),
+            encoding='utf-8'
+        )
         
         # Crear .gitignore
         gitignore = '''# Leviathan-UI Project
@@ -291,37 +606,61 @@ __pycache__/
 
 Instalador generado con Leviathan-UI SetupDialogs v{self.VERSION}
 
-## Comandos
+## Estructura del Proyecto
+
+```
+{name}/
+├── leviathan.json      # Manifest (tipo package.json)
+├── package.json        # Para npm users
+├── src/
+│   └── index.ls       # Código principal (YAML + JS)
+├── assets/            # Recursos gráficos
+├── dist/              # Output compilado
+└── .gitignore
+```
+
+## Comandos (tipo npm)
 
 ```bash
+# Inicializar proyecto
+leviathan-ui init {name}
+
 # Testear sintaxis
+leviathan-ui run test
 leviathan-ui start
 
-# Precompilar a .lsx
-leviathan-ui precompile src/{name}.ls
+# Precompilar .ls → .lsx
+leviathan-ui precompile
 
 # Compilar a .exe
-leviathan-ui compile src/{name}.lsx
+leviathan-ui build
+leviathan-ui compile
 
-# Crear paquete final blindado
+# Empaquetar
+leviathan-ui pack
 leviathan-ui packageStart .
+```
+
+## Sintaxis LeviScript
+
+LeviScript combina YAML para configuración + JS para lógica:
+
+```javascript
+# Config YAML-like
+meta:
+  name: "MiApp"
+  version: "1.0.0"
+
+# Variables JS
+const installDir = `${{env.PROGRAMFILES}}/MiApp`;
+
+# Funciones
+function onInstall(progress) {{
+  progress.step("Instalando...", 50);
+}}
 ```
 '''
         (project_dir / 'README.md').write_text(readme, encoding='utf-8')
-    
-    def _create_config(self, project_dir: Path, name: str, skeleton_type: str):
-        """Crear archivo de configuración del proyecto"""
-        config = {
-            'name': name,
-            'version': '1.0.0',
-            'skeleton': skeleton_type,
-            'leviathan_version': self.VERSION,
-            'entry_point': f'src/{name}.ls',
-            'output_dir': 'dist',
-        }
-        (project_dir / 'leviathan.json').write_text(
-            json.dumps(config, indent=2), encoding='utf-8'
-        )
     
     def cmd_activepath(self, args) -> int:
         """Registrar leviathan-ui al PATH de Windows"""
@@ -377,8 +716,40 @@ python "{script_path.absolute()}" %*
         
         return 0
     
+    def _check_security_issues(self, project_dir: Path) -> list:
+        """Buscar posibles problemas de seguridad en el código"""
+        issues = []
+        sensitive_patterns = [
+            (r'password\s*=\s*["\'][^"\']+["\']', "🔑 Password hardcoded detectado"),
+            (r'api[_-]?key\s*=\s*["\'][^"\']+["\']', "🔑 API Key expuesta"),
+            (r'secret\s*=\s*["\'][^"\']+["\']', "🔑 Secret detectado"),
+            (r'token\s*=\s*["\'][^"\']+["\']', "🔑 Token expuesto"),
+            (r'auth\s*=\s*["\'][^"\']+["\']', "🔑 Credencial de auth detectada"),
+            (r'private[_-]?key\s*=\s*["\'][^"\']+["\']', "🔑 Private Key expuesta"),
+            (r'jdbc:.*://.*:.*@', "🔑 Connection string con credenciales"),
+            (r'http://[^\s]*:(password|pass|pwd|secret)', "🔑 URL con password"),
+        ]
+        
+        # Buscar en archivos .ls y .lsx
+        for ext in ['*.ls', '*.lsx']:
+            for file in project_dir.rglob(ext):
+                try:
+                    content = file.read_text(encoding='utf-8', errors='ignore')
+                    for pattern, msg in sensitive_patterns:
+                        if re.search(pattern, content, re.IGNORECASE):
+                            issues.append(f"{msg} en {file.name}")
+                except:
+                    continue
+        
+        # Buscar en archivos de configuración
+        for file in ['.env', 'config.json', 'secrets.json', 'credentials.json']:
+            if (project_dir / file).exists():
+                issues.append(f"⚠️  Archivo potencialmente sensible: {file}")
+        
+        return issues
+
     def cmd_show_status(self, args) -> int:
-        """Mostrar estado del proyecto actual"""
+        """Mostrar estado del proyecto con checklist y análisis de seguridad"""
         print("🐉 Leviathan-UI - Estado del Proyecto")
         print()
         
@@ -386,57 +757,93 @@ python "{script_path.absolute()}" %*
         config_file = Path('leviathan.json')
         if not config_file.exists():
             print("❌ No se encontró leviathan.json")
-            print("   Ejecuta 'leviathan-ui configure' para crear un proyecto")
+            print("   Ejecuta 'leviathan-ui init' para crear un proyecto")
             return 1
         
         config = json.loads(config_file.read_text(encoding='utf-8'))
+        project_dir = Path('.')
         
         print(f"📦 Proyecto: {config.get('name', 'N/A')}")
         print(f"🔖 Versión: {config.get('version', 'N/A')}")
-        print(f"🔧 Esqueleto: {config.get('skeleton', 'N/A')}")
-        print(f"📁 Entry Point: {config.get('entry_point', 'N/A')}")
+        print(f"🔧 Template: {config.get('template', 'N/A')}")
         print()
         
-        # Verificar archivos
-        entry_point = Path(config.get('entry_point', 'setup.ls'))
-        if entry_point.exists():
-            print(f"✓ Script LeviScript: {entry_point}")
-        else:
-            print(f"✗ Script LeviScript no encontrado: {entry_point}")
+        # Checklist de progreso del proyecto
+        print("📋 Checklist de Desarrollo:")
         
-        lsx_file = entry_point.with_suffix('.lsx')
-        if lsx_file.exists():
-            print(f"✓ Precompilado: {lsx_file} ({lsx_file.stat().st_size} bytes)")
-        else:
-            print(f"✗ No precompilado todavía")
+        steps = [
+            ("leviathan.json", "✅ Inicializado", "⬜ Inicializar proyecto", "init"),
+            ("src/index.ls", "✅ Script creado", "⬜ Crear script LeviScript", None),
+            ("src/index.ls", "✅ Sintaxis OK", "⬜ Testear sintaxis", "run test"),
+            ("src/index.lsx", "✅ Precompilado", "⬜ Precompilar a .lsx", "precompile"),
+            ("dist/*.exe", "✅ Compilado", "⬜ Compilar a .exe", "build"),
+            ("dist/*_Package.exe", "✅ Empaquetado", "⬜ Empaquetar", "pack"),
+        ]
         
-        # Verificar dependencias
+        completed = 0
+        for pattern, done_msg, todo_msg, cmd in steps:
+            path = Path(pattern)
+            if path.exists() or list(project_dir.glob(pattern)):
+                print(f"   {done_msg}")
+                completed += 1
+            else:
+                next_step = f" → leviathan-ui {cmd}" if cmd else ""
+                print(f"   {todo_msg}{next_step}")
+        
         print()
-        print("📋 Dependencias:")
+        progress_pct = int(completed / len(steps) * 100)
+        bar = "█" * (progress_pct // 10) + "░" * (10 - progress_pct // 10)
+        print(f"   Progreso: [{bar}] {progress_pct}% ({completed}/{len(steps)})")
+        print()
+        
+        # Análisis de seguridad
+        print("🔒 Análisis de Seguridad:")
+        security_issues = self._check_security_issues(project_dir)
+        
+        if security_issues:
+            print(f"   ⚠️  {len(security_issues)} problema(s) detectado(s):")
+            for issue in security_issues[:5]:
+                print(f"      {issue}")
+            if len(security_issues) > 5:
+                print(f"      ... y {len(security_issues) - 5} más")
+            print()
+            print("   🔴 ESTADO: Riesgo - Revisa los archivos antes de compilar")
+        else:
+            print("   ✅ No se detectaron credenciales expuestas")
+            print("   🟢 ESTADO: Seguro - Listo para distribuir")
+        
+        print()
+        
+        # Dependencias
+        print("📦 Dependencias del Sistema:")
+        deps = []
         try:
             import PyQt6
-            print("  ✓ PyQt6")
+            deps.append("  ✓ PyQt6")
         except ImportError:
-            print("  ✗ PyQt6 (no instalado)")
+            deps.append("  ✗ PyQt6 (pip install PyQt6)")
             
         try:
             import PIL
-            print("  ✓ Pillow")
+            deps.append("  ✓ Pillow")
         except ImportError:
-            print("  ✗ Pillow (no instalado)")
+            deps.append("  ✗ Pillow (pip install Pillow)")
         
         if HAS_TQDM:
-            print("  ✓ tqdm")
+            deps.append("  ✓ tqdm")
         else:
-            print("  ✗ tqdm (opcional)")
+            deps.append("  ⬜ tqdm (opcional)")
             
         if HAS_PYINSTALLER:
-            print("  ✓ PyInstaller")
+            deps.append("  ✓ PyInstaller")
         else:
-            print("  ✗ PyInstaller (requerido para compile)")
+            deps.append("  ✗ PyInstaller (pip install pyinstaller)")
+        
+        for dep in deps:
+            print(dep)
         
         print()
-        print("⚙️  Estado: Listo para compilar")
+        print(f"💡 Tip: Usa 'leviathan-ui help' para ver la guía completa")
         return 0
     
     def cmd_start(self, args) -> int:
@@ -670,6 +1077,120 @@ if __name__ == '__main__':
         print("   • Recursos incrustados")
         print("   • Anti-debugging básico")
         print("   • Verificación de integridad")
+        
+        return 0
+
+    def cmd_help(self, args) -> int:
+        """Guía interactiva paso a paso"""
+        from pathlib import Path
+        
+        topic = getattr(args, 'topic', 'all')
+        
+        print("🐉 Leviathan-UI - Guía Paso a Paso")
+        print()
+        print("═══════════════════════════════════════════════════════════")
+        print()
+        
+        if topic in ['all', 'init']:
+            print("📦 PASO 1: Inicializar Proyecto")
+            print("─────────────────────────────────────────────────────────")
+            print("   Comando: leviathan-ui init <nombre> [--template nativeGear]")
+            print()
+            print("   Esto crea:")
+            print("   ├── leviathan.json      # Manifest del proyecto")
+            print("   ├── package.json        # Para npm users")
+            print("   ├── src/")
+            print("   │   └── index.ls       # Código principal")
+            print("   ├── assets/            # Recursos gráficos")
+            print("   └── dist/              # Output compilado")
+            print()
+            print("   Templates disponibles:")
+            print("   • nativeGear    - Esqueleto nativo de Leviathan-UI")
+            print("   • packagemaker  - Esqueleto legacy PackageMaker")
+            print()
+        
+        if topic in ['all', 'syntax']:
+            print("📝 PASO 2: Escribir Código LeviScript")
+            print("─────────────────────────────────────────────────────────")
+            print("   Sintaxis: YAML-like + JS-style")
+            print()
+            print("   # Configuración YAML-like:")
+            print("   meta:")
+            print("     name: 'MiApp'")
+            print("     version: '1.0.0'")
+            print()
+            print("   # Variables JS:")
+            print("   const installDir = `${env.PROGRAMFILES}/MiApp`;")
+            print()
+            print("   # Funciones:")
+            print("   function onInstall(progress) {")
+            print("     progress.step('Instalando...', 50);")
+            print("   }")
+            print()
+        
+        if topic in ['all', 'build']:
+            print("🔧 PASO 3: Desarrollo y Testing")
+            print("─────────────────────────────────────────────────────────")
+            print("   1. Testear sintaxis:")
+            print("      leviathan-ui run test")
+            print("      leviathan-ui start           # alias")
+            print()
+            print("   2. Precompilar .ls → .lsx:")
+            print("      leviathan-ui precompile")
+            print()
+            print("   3. Compilar a .exe:")
+            print("      leviathan-ui build")
+            print("      leviathan-ui compile         # alias")
+            print()
+            print("   4. Ver estado:")
+            print("      leviathan-ui status")
+            print("      leviathan-ui showStatus      # alias")
+            print()
+        
+        if topic in ['all', 'pack']:
+            print("📦 PASO 4: Empaquetar y Distribuir")
+            print("─────────────────────────────────────────────────────────")
+            print("   1. Empaquetar:")
+            print("      leviathan-ui pack")
+            print("      leviathan-ui packageStart    # alias")
+            print()
+            print("   2. Con ofuscación (protección):")
+            print("      leviathan-ui pack --obfuscate")
+            print()
+            print("   3. Instalador global:")
+            print("      leviathan-ui install -g")
+            print("      leviathan-ui activepath        # alias")
+            print()
+        
+        if topic == 'all':
+            print("═══════════════════════════════════════════════════════════")
+            print()
+            print("📋 RESUMEN DE COMANDOS:")
+            print()
+            print("   NPM-style:          Alias legacy:")
+            print("   ─────────────────────────────────────")
+            print("   leviathan-ui init      = configure")
+            print("   leviathan-ui install   = activepath")
+            print("   leviathan-ui status    = showStatus")
+            print("   leviathan-ui run test  = start")
+            print("   leviathan-ui build     = compile")
+            print("   leviathan-ui pack      = packageStart")
+            print()
+            print("   Otros:")
+            print("   leviathan-ui precompile")
+            print("   leviathan-ui --version")
+            print("   leviathan-ui help --topic <init|build|pack|syntax>")
+            print()
+        
+        print("═══════════════════════════════════════════════════════════")
+        print()
+        print("💡 Tips:")
+        print("   • Usa 'leviathan-ui status' para ver el estado actual")
+        print("   • El análisis de seguridad detecta keys/passwords expuestos")
+        print("   • El checklist muestra qué pasos faltan y cómo completarlos")
+        print()
+        print("📚 Documentación: https://github.com/JesusQuijada34/leviathan-ui")
+        print()
         
         return 0
 

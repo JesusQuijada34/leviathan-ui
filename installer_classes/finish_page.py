@@ -20,32 +20,33 @@ class FinishPage(QWidget):
         self.setup_ui()
     
     def setup_ui(self):
+        self.setStyleSheet("background-color: #121822; border: none;")
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(50, 50, 50, 50)
-        layout.setSpacing(30)
-        
+        layout.setContentsMargins(25, 20, 25, 20)
+        layout.setSpacing(12)
+
         # Icono de éxito
         icon = QLabel("✓")
-        icon.setFont(QFont("Segoe UI", 72))
+        icon.setFont(QFont("Segoe UI", 48))
         icon.setStyleSheet("color: #4CAF50; background: transparent;")
         icon.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(icon)
-        
+
         # Título
         title = QLabel(i18n.get("finish_title"))
-        title.setFont(QFont("Segoe UI", 26, QFont.Weight.Bold))
+        title.setFont(QFont("Segoe UI", 20, QFont.Weight.Bold))
         title.setStyleSheet("color: white; background: transparent;")
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title)
-        
+
         subtitle = QLabel(i18n.get("finish_subtitle"))
-        subtitle.setFont(QFont("Segoe UI", 12))
+        subtitle.setFont(QFont("Segoe UI", 10))
         subtitle.setStyleSheet("color: #aaaaaa; background: transparent;")
         subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
         subtitle.setWordWrap(True)
         layout.addWidget(subtitle)
-        
-        layout.addSpacing(30)
+
+        layout.addSpacing(15)
         
         # Info de lo instalado
         info_frame = QFrame()
@@ -63,14 +64,13 @@ class FinishPage(QWidget):
             "🐍 Python Package\n"
             "✅ Instalación verificada"
         )
-        info_text.setFont(QFont("Consolas", 11))
-        info_text.setStyleSheet("color: #4CAF50; background: transparent; padding: 20px;")
+        info_text.setFont(QFont("Consolas", 10))
+        info_text.setStyleSheet("color: #4CAF50; background: transparent; padding: 12px;")
         info_text.setAlignment(Qt.AlignmentFlag.AlignCenter)
         info_layout.addWidget(info_text)
         
         layout.addWidget(info_frame)
-        layout.addStretch()
-        
+
         # Mensaje final
         desc = QLabel(i18n.get("finish_desc"))
         desc.setFont(QFont("Segoe UI", 11))

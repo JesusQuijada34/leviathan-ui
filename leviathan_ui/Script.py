@@ -92,6 +92,7 @@ class TokenType(Enum):
     DOT = auto()             # .
     ARROW = auto()           # =>
     DOLLAR = auto()          # $
+    AT = auto()              # @
     
     # Special
     NEWLINE = auto()
@@ -332,6 +333,7 @@ class LeviLexer:
                 ',': TokenType.COMMA,
                 '.': TokenType.DOT,
                 '$': TokenType.DOLLAR,
+                '@': TokenType.AT,
             }
             
             if self.peek() in single_char_ops:

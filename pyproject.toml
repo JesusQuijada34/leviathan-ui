@@ -40,8 +40,15 @@ Repository = "https://github.com/JesusQuijada34/leviathan-ui"
 Issues = "https://github.com/JesusQuijada/leviathan-ui/issues"
 
 [tool.setuptools]
-packages = ["leviathan_ui"]
+packages = ["leviathan_ui", "installer_classes"]
 
 [tool.setuptools.package-data]
-"*" = ["lang/*.lv-lng", "assets/*.svg", "app/*.ico"]
+"*" = ["lang/*.lv-lng", "assets/*.svg", "app/*.ico", "assets/*.png"]
+
+[project.scripts]
+leviathan-ui = "leviathan_ui.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest", "black", "flake8", "mypy"]
+build = ["pyinstaller", "twine", "build"]
 

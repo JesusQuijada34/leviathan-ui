@@ -5,6 +5,7 @@ install_page.py - Página de progreso de instalación
 
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QTextEdit
 from PyQt6.QtGui import QFont, QPixmap
+from PyQt6.QtCore import Qt, pyqtSignal
 
 from leviathan_ui.progress_bar import LeviathanProgressBar
 from installer_classes.i18n_manager import I18nManager
@@ -15,27 +16,35 @@ i18n = I18nManager()
 
 class InstallPage(QWidget):
     """Página de instalación con progreso y log de salida"""
-    
+
+    finished = pyqtSignal(bool, str)  # success, error_msg
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setup_ui()
         self.worker = None
     
     def setup_ui(self):
+        self.setStyleSheet("background-color: #121822; border: none;")
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
         
-        # Banner superior (splash.png)
+        # Banner superior (splash.png) - mantener aspect ratio
         self.banner = QLabel()
-        self.banner.setFixedHeight(120)
-        self.banner.setScaledContents(True)
+        self.banner.setFixedHeight(100)
+        self.banner.setAlignment(Qt.AlignmentFlag.AlignCenter)
         banner_pixmap = QPixmap("assets/splash.png")
         if not banner_pixmap.isNull():
-            self.banner.setPixmap(banner_pixmap)
+            scaled = banner_pixmap.scaled(
+                800, 100,
+                Qt.AspectRatioMode.KeepAspectRatioByExpanding,
+                Qt.TransformationMode.SmoothTransformation
+            )
+            self.banner.setPixmap(scaled)
         else:
             self.banner.setStyleSheet("""
-                background: qlineargradient(x1:0, y1:0, x2:0, y2:1, 
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
                     stop:0 #1a1a2e, stop:1 #16213e);
             """)
         layout.addWidget(self.banner)
@@ -43,21 +52,21 @@ class InstallPage(QWidget):
         # Contenido
         content = QWidget()
         content_layout = QVBoxLayout(content)
-        content_layout.setContentsMargins(50, 30, 50, 30)
-        content_layout.setSpacing(20)
-        
+        content_layout.setContentsMargins(30, 20, 30, 20)
+        content_layout.setSpacing(12)
+
         # Título
         title = QLabel(i18n.get("install_title"))
-        title.setFont(QFont("Segoe UI", 20, QFont.Weight.Bold))
+        title.setFont(QFont("Segoe UI", 18, QFont.Weight.Bold))
         title.setStyleSheet("color: white; background: transparent;")
         content_layout.addWidget(title)
-        
+
         subtitle = QLabel(i18n.get("install_subtitle"))
-        subtitle.setFont(QFont("Segoe UI", 11))
+        subtitle.setFont(QFont("Segoe UI", 10))
         subtitle.setStyleSheet("color: #aaaaaa; background: transparent;")
         content_layout.addWidget(subtitle)
-        
-        content_layout.addSpacing(20)
+
+        content_layout.addSpacing(15)
         
         # Barra de progreso
         self.progress = LeviathanProgressBar()
@@ -85,7 +94,7 @@ class InstallPage(QWidget):
                 padding: 15px;
             }
         """)
-        self.log_area.setFixedHeight(200)
+        self.log_area.setFixedHeight(120)
         content_layout.addWidget(self.log_area)
         
         layout.addWidget(content, 1)
@@ -123,3 +132,5 @@ class InstallPage(QWidget):
             self.status_label.setText("✗ " + i18n.get("error_title"))
             self.status_label.setStyleSheet("color: #f44336; background: transparent;")
             self.log_area.append(f"\n❌ ERROR:\n{error_msg}")
+        # Emitir señal para que el padre cambie a página final
+        self.finished.emit(success, error_msg)

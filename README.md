@@ -1,8 +1,12 @@
-# 🌊 Leviathan-UI: Framework Premium para PyQt6 (v1.0.4)
+# 🌊 Leviathan-UI: Framework Premium para PyQt6 (v1.0.5)
 
 **Leviathan-UI** es un framework profesional para crear aplicaciones de escritorio con el aspecto moderno de **Windows 11** usando Python y PyQt6.
 
-> **Lanzamiento 1.0.4** — Correcciones de compatibilidad PyQt6, scripts de demo funcionales, y mejoras visuales en controles.
+> **Lanzamiento 1.0.5** — Instalador profesional refinado, UI compacta y navegación fluida entre páginas.
+
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://python.org)
+[![PyQt6](https://img.shields.io/badge/PyQt6-6.5%2B-green)](https://pypi.org/project/PyQt6/)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 ## 📚 Documentación
 
@@ -37,17 +41,19 @@ python -m twine upload dist/*
 
 ---
 
-## 🚀 ¿Qué hay de nuevo? (v1.0.4)
+## 🚀 ¿Qué hay de nuevo? (v1.0.5)
 
-### 🐛 Correcciones
-- **Compatibilidad PyQt6 completa**: Todos los scripts actualizados a sintaxis moderna (`Qt.AlignmentFlag`, `app.exec()`)
-- **Scripts de demo 100% funcionales**: `ghost`, `ghostBlur`, `polished`, `dialogBox` ejecutan sin errores
-- **TitleBar transparente**: Mejor integración visual con ventanas personalizadas
+### ✨ Novedades
+- **🎯 Navegación Wizard**: Interface de instalación tipo NSIS con 4 páginas claras y botones de navegación
+- **📊 Indicador Visual**: 4 dots que muestran progreso (● ● ● ●)
+- **🖼️ Splash Integrado**: Logo y título en ventana principal con fade-out suave
+- **📐 Layout Compacto**: 720×480px optimizado, sin espacio desperdiciado
 
-### 📚 Mejoras
-- Documentación FAQ completa
-- README reorganizado con ejemplos claros
-- Changelog actualizado con todas las correcciones
+### � Correcciones
+- **Navegación fluida**: Transiciones instantáneas entre páginas del instalador
+- **Fondo uniforme**: #121822 oscuro en todos los widgets, sin bordes azules de Windows
+- **Banners proporcionales**: Aspect ratio correcto mantenido al redimensionar
+- **PyQt6 API moderna**: Uso correcto de `QEasingCurve.Type.OutQuad`
 
 Hemos mejorado el framework para que sea más fácil de usar en todo el mundo:
 

@@ -1,15 +1,53 @@
-# 🚀 Notas de Publicación - Leviathan-UI v1.0.4
+# 🚀 Notas de Publicación - Leviathan-UI v1.0.5
 
-Esta versión de Leviathan UI se enfoca en compatibilidad, empaquetado y documentación para desarrolladores.
+Esta versión se enfoca en refinamiento del instalador profesional, navegación fluida y pulido visual.
 
-## Cambios clave en 1.0.4
+## ✨ Novedades en 1.0.5
 
-- Migración completa a **PyQt6**.
-- Generación de paquete wheel (`dist/leviathan_ui-1.0.4-py3-none-any.whl`).
-- Documentación nueva en `docs/` y guía de publicación a PyPI.
-- `.env` de ejemplo para desarrollar con variables locales.
-- `pyproject.toml` actualizado con metadata de paquete y dependencias.
-- `details.xml` actualizado para reflejar el nuevo nombre y versión.
+### 🎯 Navegación Wizard Profesional
+El instalador ahora presenta una experiencia de 4 pasos tipo NSIS:
+1. **Bienvenida** - Banner vertical + introducción
+2. **Opciones** - Checkboxes para personalizar instalación
+3. **Instalación** - Progreso en tiempo real con logs
+4. **Finalizado** - Confirmación de éxito
+
+- **Indicador Visual**: 4 dots (● ● ● ●) muestran el progreso actual
+- **Botones de Navegación**: Atrás/Siguiente/Cancelar con estados dinámicos
+- **Transición Automática**: Al terminar la instalación, avanza directo a "Finalizado"
+
+### 🖼️ Splash Screen Integrado (Modo APPX)
+- El splash ahora es parte de la ventana principal (no ventana separada)
+- Muestra logo `app/app-icon.ico` + título "Leviathan-UI" + subtítulo versión
+- Fade-out suave de 600ms revelando la interfaz principal
+- Barra de título visible durante todo el proceso
+
+### 📐 Layout Compacto y Profesional
+- **Tamaño optimizado**: 720×480px (anterior 70% pantalla era excesivo)
+- **Sin espacio desperdiciado**: Eliminados todos `addStretch()` innecesarios
+- **Fuentes refinadas**: Títulos 20px (era 26px), subtítulos 11px (era 14px)
+- **Controles compactos**: Botones 75×28px, barra inferior 50px altura
+
+### 🐛 Correcciones Críticas
+- **Navegación**: Solucionado `QEasingCurve.Type.OutQuad` (PyQt6 API)
+- **Fondos uniformes**: Todos los widgets usan #121822 sólido (sin azul Windows)
+- **Banners**: Aspect ratio preservado al redimensionar
+- **Eventos**: Splash transparente a clicks (`WA_TransparentForMouseEvents`)
+
+---
+
+## Historial de Versiones
+
+### v1.0.4 (2026-04-07)
+- Migración completa a **PyQt6**
+- Generación de paquete wheel
+- Documentación en `docs/`
+- Soporte multilingüe integral (10+ idiomas)
+- Efecto GhostBlur estándar
+
+### v1.0.3 (2026-01-23)
+- Soporte multi-idioma (i18n)
+- Pantalla de bienvenida SVG
+- Instalación automática mejorada
 
 ---
 
