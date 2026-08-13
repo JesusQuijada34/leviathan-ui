@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <app>
-  <publisher>Influent</publisher>
+  <publisher>influent</publisher>
   <app>leviathan-ui</app>
   <name>Leviathan UI PyQt6 Win11 Skin Framework</name>
-  <version>v1.0.5-26.08-21.56-AlphaCube</version>
-  <correlationid>7dba02babe828b23cbe870e77ede4d0df3b4eb3c69fdfcaa130db20f7d02b6e0</correlationid>
+  <version>v1.0-26.08-21.56</version>
+  <correlationid>ba237f4a66a3d68c32bd5fbba6b195d26f7a5fe421e25a41de953ae6c9fca8c7</correlationid>
   <rate>Todas las edades</rate>
   <author>JesusQuijada34</author>
   <platform>AlphaCube</platform>

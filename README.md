@@ -1,3 +1,28 @@
+# Leviathan UI PyQt6 Win11 Skin Framework
+
+**Identidad del paquete:** `influent.leviathan-ui.v1.0-26.08-21.56`
+**Autor:** `JesusQuijada34`
+**Plataforma:** `AlphaCube`
+**Descripción:** Estructura reparada por MoonFix
+
+## Estructura PackageMaker 3.2.7
+
+Este repositorio fue normalizado mediante **MoonFix**, usando la estructura de PackageMaker 3.2.7. El paquete público debe conservar `details.xml`, `version.res`, `autorun`, `autorun.bat`, `.storedetail`, `updater.py`, `config/settings.json`, los marcadores `.container` y los archivos de documentación correspondientes. El publisher oficial es `influent` y la versión pública no contiene sufijo de plataforma.
+
+## Instalación y ejecución
+
+Instala las dependencias declaradas en `lib/requirements.txt` cuando exista y ejecuta el entrypoint real del proyecto. En Linux, los comandos privilegiados son específicos de Danenone y no deben trasladarse a Windows. En proyectos AlphaCube, la validación Windows debe realizarse con el `buildthis` oficial de PackageMaker.
+
+## Validación
+
+La fuente debe pasar compilación sintáctica, pruebas funcionales disponibles, comprobación de identidad XML, protección contra traversal en ZIP y llamadas seguras a subprocess. Los artefactos `.iflapp` deben ser generados por PackageMaker; los paquetes Debian deben usar el nombre canónico `influent.leviathan-ui.v1.0-26.08-21.56_ARCH.deb`.
+
+## Release
+
+El tag y el título del release deben ser exactamente `v1.0-26.08-21.56`. Los assets deben usar el nombre canónico del paquete y una extensión objetiva. No se permite publicar un release AlphaCube que contenga únicamente el build Linux.
+
+## Referencia original
+
 # 🌊 Leviathan-UI: Framework Premium para PyQt6 (v1.0.5)
 
 **Leviathan-UI** es un framework profesional para crear aplicaciones de escritorio con el aspecto moderno de **Windows 11** usando Python y PyQt6.
@@ -108,17 +133,17 @@ class MiApp(QWidget):
     def __init__(self):
         super().__init__()
         self.resize(900, 550)
-        
+
         # Aplicar efecto GhostBlur
         WipeWindow.create().set_mode("ghostBlur").set_radius(10).apply(self)
-        
+
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        
+
         # Barra de título personalizada
         self.title_bar = CustomTitleBar(self, title="Mi Aplicación")
         layout.addWidget(self.title_bar)
-        
+
         # Contenido
         content = QLabel("¡Hola Mundo con Leviathan-UI!")
         content.setStyleSheet("color: white; font-size: 24px;")
