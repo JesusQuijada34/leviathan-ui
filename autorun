@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+# Autorun script for leviathan-ui
+/usr/bin/python3 ./leviathan-ui.py
