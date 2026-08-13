@@ -1,11 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <app>
-    <publisher>Influent</publisher>
-    <app>leviathan-ui</app>
-    <name>Leviathan UI PyQt6 Win11 Skin Framework</name>
-    <version>v1.0.5-26.04-09.21</version>
-    <correlationid>546c234215ef57206935ba42f07da21be00f72ed66f83803853abe991a0c275</correlationid>
-    <rate>PUBLIC ALL</rate>
-    <author>JesusQuijada34</author>
-    <platform>Knosthalij</platform>
+  <publisher>Influent</publisher>
+  <app>leviathan-ui</app>
+  <name>Leviathan UI PyQt6 Win11 Skin Framework</name>
+  <version>v1.0.5-26.08-23.43-AlphaCube</version>
+  <correlationid>a497569ff07042c76bb8d06ad07387b0115d343ee85d16f5d687e2072277e35f</correlationid>
+  <rate>Todas las edades</rate>
+  <author>JesusQuijada34</author>
+  <platform>AlphaCube</platform>
+  <description>Framework de interfaz PyQt6 portable para Linux y Windows, con efectos visuales Windows opcionales y fallback multiplataforma.</description>
+  <year>2026</year>
 </app>

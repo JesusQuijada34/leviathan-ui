@@ -2,6 +2,12 @@
 
 **Leviathan-UI** es un framework profesional para crear aplicaciones de escritorio con el aspecto moderno de **Windows 11** usando Python y PyQt6.
 
+## Clasificación PackageMaker
+
+Leviathan-UI se clasifica como **AlphaCube**: PyQt6 y el núcleo de widgets funcionan en Linux y Windows, mientras que los efectos DWM/Mica se activan solo cuando Windows los ofrece y tienen fallback de pintura Qt. No se debe tratar como un paquete Knosthalij exclusivo de Windows.
+
+Las dependencias mínimas son PyQt6 y Pillow. Los scripts de demostración sirven únicamente para ejemplos; el paquete fuente principal está en `leviathan_ui/`. No se publicarán archivos de instalación genéricos como si fueran la implementación del framework ni se incluirán credenciales de PyPI.
+
 > **Lanzamiento 1.0.5** — Instalador profesional refinado, UI compacta y navegación fluida entre páginas.
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://python.org)
@@ -84,7 +90,7 @@ No necesitas usar comandos complejos. Hemos creado un **asistente visual** que h
 3.  Escribe el siguiente código y presiona **Enter**:
 
 ```bash
-python leviathan-ui.py
+python -m leviathan_ui.cli --help
 ```
 
 *Esto abrirá una ventana que te guiará paso a paso, igual que cuando instalas cualquier otro programa en Windows.*
