@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" role="img" aria-label="Setup complete animation">
+ <circle cx="80" cy="60" r="34" fill="#11251f" stroke="#31c98b" stroke-width="3"><animate attributeName="r" values="29;35;32" dur="1.8s" repeatCount="indefinite"/></circle>
+ <path d="M61 60l13 13 27-29" fill="none" stroke="#54e3a6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="64" stroke-dashoffset="64"><animate attributeName="stroke-dashoffset" values="64;0;0" keyTimes="0;.35;1" dur="2.3s" repeatCount="indefinite"/></path>
+ <circle cx="39" cy="31" r="2" fill="#74dcff"><animate attributeName="opacity" values="0;1;0" dur="1.7s" repeatCount="indefinite"/></circle><circle cx="123" cy="85" r="2.5" fill="#a989ff"><animate attributeName="opacity" values="1;0;1" dur="2.1s" repeatCount="indefinite"/></circle>
+</svg>

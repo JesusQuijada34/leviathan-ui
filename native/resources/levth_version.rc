@@ -1,0 +1,36 @@
+#include <windows.h>
+#define IDI_LEVTH_ICON 101
+IDI_LEVTH_ICON ICON "app/app-icon.ico"
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,5,0
+ PRODUCTVERSION 1,0,5,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName", "influent\0"
+            VALUE "FileDescription", "Leviathan-UI Native SDK module\0"
+            VALUE "FileVersion", "1.0.5.0\0"
+            VALUE "InternalName", "Leviathan-UI\0"
+            VALUE "LegalCopyright", "Copyright (c) influent\0"
+            VALUE "OriginalFilename", "liblevth-native.dll\0"
+            VALUE "ProductName", "Leviathan-UI Native Framework\0"
+            VALUE "ProductVersion", "1.0.5.0\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1200
+    END
+END

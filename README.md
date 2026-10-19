@@ -1,5 +1,7 @@
 # Leviathan UI PyQt6 Win11 Skin Framework
 
+> **Migración en curso en la rama `levthc`:** el destino de distribución es un SDK nativo exclusivo para Windows, con DLL C (`liblevth*.dll`) y ABI/FFI descrita en [`native/README.md`](native/README.md). El contenido Python/PyQt6 que sigue documenta la versión heredada; no se debe interpretar como el nuevo instalador nativo ni como una migración completa. La rama `levthc` conserva esos archivos hasta que cada módulo C tenga equivalencia y pruebas.
+
 **Identidad del paquete:** `influent.leviathan-ui.v1.0-26.08-21.56`
 **Autor:** `JesusQuijada34`
 **Plataforma:** `AlphaCube`
